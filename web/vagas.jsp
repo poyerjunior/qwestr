@@ -1,7 +1,3 @@
-<%-- 
-    Document   : candidato
-    Created on : 06/06/2017, 21:40:45
---%>
 
 <jsp:include page="header.jsp"/>
 <div class="margin-nav">
