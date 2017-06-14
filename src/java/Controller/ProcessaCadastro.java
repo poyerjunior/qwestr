@@ -7,24 +7,24 @@ package Controller;
 
 import Model.Candidato;
 import Model.CandidatoDAO;
+import Model.Empresa;
+import Model.EmpresaDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author pcstr
  */
-@WebServlet(name = "ProcessaLogin", urlPatterns = {"/ProcessaLogin"})
-public class ProcessaLogin extends HttpServlet {
+@WebServlet(name = "ProcessaCadastro", urlPatterns = {"/ProcessaCadastro"})
+public class ProcessaCadastro extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,27 +40,57 @@ public class ProcessaLogin extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
+        String tipo = request.getParameter("grouptipo");
+        String nome = request.getParameter("nome");
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
+        String cpf = request.getParameter("cpf");
+        String caminho = request.getParameter("caminho");
+        String nomefile = request.getParameter("nomefile");
+        String cnpj = request.getParameter("cnpj");
         
-        Candidato candidato = new Candidato();
-        CandidatoDAO candidatoDAO = new CandidatoDAO();
-        
-        if((email != "") && (senha != "")){
+        if("0".equals(tipo)){
+            CandidatoDAO CandidatoDAO = new CandidatoDAO();
+            Candidato Candidato = new Candidato();
+            
             try {
-                candidato = candidatoDAO.verificaLogin(email, senha);
+                Candidato = CandidatoDAO.verificaLogin(email, senha);
+                
+                if(Candidato.getId() == 0){
+                    Candidato.setNome(nome);
+                    Candidato.setEmail(email);
+                    Candidato.setSenha(senha);
+                    Candidato.setCpf(cpf);
+                    Candidato.setCurriculo(caminho);
+                    CandidatoDAO.insert(Candidato);
+                }else{
+                    out.println("ERRO_USUARIO_CADASTRADO");
+                }
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProcessaLogin.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProcessaCadastro.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            if(candidato.getId() != 0){
-                HttpSession session = request.getSession();
-                session.setAttribute("usuario", candidato);
-                out.println("vagas.jsp");    
-            }else{
-                out.println("ERRO");
+        }else if("1".equals(tipo)){
+            EmpresaDAO EmpresaDAO = new EmpresaDAO();
+            Empresa Empresa = new Empresa();
+            
+            try {
+                Empresa = EmpresaDAO.verificaLogin(email, senha);
+                
+                if(Empresa.getId() == 0){
+                    Empresa.setNome(nome);
+                    Empresa.setEmail(email);
+                    Empresa.setSenha(senha);
+                    Empresa.setCnpj(cnpj);
+                    EmpresaDAO.insert(Empresa);
+                }else{
+                    out.println("ERRO_USUARIO_CADASTRADO");
+                }
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ProcessaCadastro.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

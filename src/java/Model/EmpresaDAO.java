@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class EmpresaDAO {
 
-    private String stmtInsert = "insert into empresa(nome, cnpj, email, senha) values(?,?,?,?,?);";
+    private String stmtInsert = "insert into empresa(nome, cnpj, email, senha) values(?,?,?,?);";
     private String stmtUpdate = "update empresa set nome=?, cnpj=?, email=?, senha=? where id=?";
     private String stmtSelect = "select * from empresa";
     private String stmtSelectById = "select * from empresa where id =?";

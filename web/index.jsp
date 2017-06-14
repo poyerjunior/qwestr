@@ -14,7 +14,7 @@
                 <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
             </div>
             <div class="row center">
-                <a id="lnkCadastre" onclick="$('#formCadastro')[0].reset();" href="#modal-cadastro" class="btn-large waves-effect waves-light teal lighten-1">Cadastre-se</a>
+                <a id="lnkCadastre" onclick="$('#formCadastro')[0].reset();resetModalCadastro(0);" href="#modal-cadastro" class="btn-large waves-effect waves-light teal lighten-1">Cadastre-se</a>
             </div>
             <br><br>
         </div>
@@ -127,46 +127,46 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input id="txtNome" type="text" class="validate">
+                        <input id="txtNome" type="text" class="validate" name="nome">
                         <label for="txtNome">Nome</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <input id="txtEmail" type="text" class="validate">
+                        <input id="txtEmail" type="text" class="validate" name="email">
                         <label for="txtEmail">E-mail</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s6">
-                        <input id="txtSenha" type="password" class="validate">
+                        <input id="txtSenha" type="password" class="validate" name="senha">
                         <label for="txtSenha">Senha</label>
                     </div>
                     <div class="input-field col s6">
-                        <input id="txtConfirmaSenha" type="password" class="validate">
+                        <input id="txtConfirmaSenha" type="password" class="validate" name="confirmasenha">
                         <label for="txtConfirmaSenha">Confirma Senha:</label>
                     </div>
                 </div>
                 <div class="row row-candidato">
                     <div class="input-field col s6">
-                        <input id="txtCpf" type="text" class="validate cpfmask">
+                        <input id="txtCpf" type="text" class="validate cpfmask" name="cpf">
                         <label for="txtCpf">Cpf</label>
                     </div>
                     <div class="input-field col s6">
                         <div class="file-field input-field">
                             <div class="btn">
                                 <span>Currículo</span>
-                                <input type="file">
+                                <input id="txtCurriculo" type="file" name="caminho">
                             </div>
                             <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text">
+                                <input class="file-path" type="text" name="nomefile">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row row-empresa none">
                     <div class="input-field col s6">
-                        <input id="txtCnpj" type="text" class="validate cnpjmask">
+                        <input id="txtCnpj" type="text" class="cnpjmask" name="cnpj">
                         <label for="txtCnpj">Cnpj</label>
                     </div>
                 </div>
@@ -186,22 +186,13 @@
     function carregaPagina() {
 
         $('input[type=radio][name=grouptipo]').change(function () {
-            if (this.value == '0') {
-                $('.row-candidato').removeClass('none');
-                $('.row-empresa').addClass('none');
-                $('#txtCnpj').val("");
-            } else if (this.value == '1') {
-                $('.row-candidato').addClass('none');
-                $('.row-empresa').removeClass('none');
-                $('#txtCpf').val("");
-            }
+            resetModalCadastro(this.value);
         });
 
     }
 
     function logar() {
         if (validaInput("formLogin")) {
-            //$.post('ProcessaLogin', $('#formLogin').serialize());
             $.ajax({
                 type: "POST",
                 url: "ProcessaLogin",
@@ -209,14 +200,58 @@
                 success: function (data)
                 {
                     if (data == "ERRO") {
-                        Materialize.toast('Usuário ou senha inválidos!', 4000);
+                        setMsg('Usuário ou senha inválidos!');
                     } else {
-                        window.location = "candidato.jsp";
+                        window.location = data;
                     }
                 }
             });
         }
+    }
 
+    function cadastrar() {
+        if (!verfSenha()) {
+            setMsg('Senhas distintas!');
+            return false;
+        }
+        if (validaInput("formCadastro")) {
+            $.ajax({
+                type: "POST",
+                url: "ProcessaCadastro",
+                data: $("#formCadastro").serialize() + "&curriculo=" + $("#txtCurriculo").val(),
+                success: function (data)
+                {
+                    if ($.trim(data) == "ERRO_USUARIO_CADASTRADO") {
+                        setMsg('E-mail já utilizado!');
+                    } else {
+                        setMsg('Dados cadastrados com sucesso!');
+                    }
+                }
+            });
+        }
+    }
+
+    function verfSenha() {
+        if (($("#txtSenha").val() != $("#txtConfirmaSenha").val()))
+            return false;
+        else
+            return true;
+    }
+
+    function resetModalCadastro(id) {
+        if (id == '0') {
+            $('.row-candidato').removeClass('none');
+            $('.row-empresa').addClass('none');
+            $('#txtCnpj').val("");
+            $("#txtCnpj").removeClass("validate");
+            $("#txtCpf").addClass("validate");
+        } else if (id == '1') {
+            $('.row-candidato').addClass('none');
+            $('.row-empresa').removeClass('none');
+            $('#txtCpf').val("");
+            $("#txtCnpj").addClass("validate");
+            $("#txtCpf").removeClass("validate");
+        }
     }
 
     function validaInput(idForm) {
@@ -227,11 +262,16 @@
             }
         });
         if (erro) {
-            Materialize.toast('Preencha os campos corretamente!', 4000);
+            setMsg('Preencha os campos corretamente!');
             return false;
         } else {
             return true;
         }
+    }
+
+    function setMsg(msg) {
+        $('.toast').remove();
+        Materialize.toast(msg, 4000);
     }
 </script>
 <jsp:include page="footer.jsp"/>
