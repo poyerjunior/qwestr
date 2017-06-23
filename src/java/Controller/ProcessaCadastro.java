@@ -9,23 +9,42 @@ import Model.Candidato;
 import Model.CandidatoDAO;
 import Model.Empresa;
 import Model.EmpresaDAO;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.output.*;
 
 /**
  *
  * @author pcstr
  */
 @WebServlet(name = "ProcessaCadastro", urlPatterns = {"/ProcessaCadastro"})
+@MultipartConfig
 public class ProcessaCadastro extends HttpServlet {
 
+    private boolean isMultipart;
+    private String filePath;
+    private int maxFileSize = 8000000;
+    private int maxMemSize = 4 * 1024;
+    private File file;
+    private static final String SAVE_DIR = "uploadFiles";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -40,6 +59,25 @@ public class ProcessaCadastro extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
+        
+        String appPath = request.getServletContext().getRealPath("");
+        // constructs path of the directory to save uploaded file
+        String savePath = appPath + File.separator + SAVE_DIR;
+         
+        // creates the save directory if it does not exists
+        File fileSaveDir = new File(savePath);
+        if (!fileSaveDir.exists()) {
+            fileSaveDir.mkdir();
+        }
+        Collection<Part> teste = request.getParts();
+        for (Part part : request.getParts()) {
+            String fileName = extractFileName(part);
+            // refines the fileName in case it is an absolute path
+            fileName = new File(fileName).getName();
+            part.write(savePath + File.separator + fileName);
+        }
+        
+
         String tipo = request.getParameter("grouptipo");
         String nome = request.getParameter("nome");
         String email = request.getParameter("email");
@@ -48,49 +86,60 @@ public class ProcessaCadastro extends HttpServlet {
         String caminho = request.getParameter("caminho");
         String nomefile = request.getParameter("nomefile");
         String cnpj = request.getParameter("cnpj");
-        
-        if("0".equals(tipo)){
+
+        if ("0".equals(tipo)) {
             CandidatoDAO CandidatoDAO = new CandidatoDAO();
             Candidato Candidato = new Candidato();
-            
+
             try {
                 Candidato = CandidatoDAO.verificaLogin(email, senha);
-                
-                if(Candidato.getId() == 0){
+
+                if (Candidato.getId() == 0) {
                     Candidato.setNome(nome);
                     Candidato.setEmail(email);
                     Candidato.setSenha(senha);
                     Candidato.setCpf(cpf);
                     Candidato.setCurriculo(caminho);
                     CandidatoDAO.insert(Candidato);
-                }else{
+                } else {
                     out.println("ERRO_USUARIO_CADASTRADO");
                 }
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ProcessaCadastro.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-        }else if("1".equals(tipo)){
+
+        } else if ("1".equals(tipo)) {
             EmpresaDAO EmpresaDAO = new EmpresaDAO();
             Empresa Empresa = new Empresa();
-            
+
             try {
                 Empresa = EmpresaDAO.verificaLogin(email, senha);
-                
-                if(Empresa.getId() == 0){
+
+                if (Empresa.getId() == 0) {
                     Empresa.setNome(nome);
                     Empresa.setEmail(email);
                     Empresa.setSenha(senha);
                     Empresa.setCnpj(cnpj);
                     EmpresaDAO.insert(Empresa);
-                }else{
+                } else {
                     out.println("ERRO_USUARIO_CADASTRADO");
                 }
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ProcessaCadastro.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
+    }
+    
+    private String extractFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                return s.substring(s.indexOf("=") + 2, s.length()-1);
+            }
+        }
+        return "";
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
