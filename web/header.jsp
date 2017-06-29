@@ -29,9 +29,9 @@
         });
 
         function carregaMaster() {
-            
+
             $('.modal').modal();
-            
+
             $(".dtmask").mask("99/99/9999");
             $(".telmask").mask("(99) 9999-9999");
             $(".cpfmask").mask("999.999.999-99");
@@ -41,21 +41,88 @@
             $(".cepmask").mask("99.999-999");
             $(".cnpjmask").mask("99.999.999/9999-99");
 
+            $(".lnkConfExcluir").on('click', function () {
+                deletar($("#command-delete").val());
+            });
+
         }
+
+        function JsonToForm(form, data, span) {
+            $.each(data, function (name, val) {
+                var $el = $('#' + form + ' [name="' + name + '"]'), type = $el.attr('type');
+                switch (type) {
+                    case 'checkbox':
+                        $el.attr('checked', 'checked');
+                        break;
+                    case 'radio':
+                        $el.filter('[value="' + val + '"]').attr('checked', 'checked');
+                        break;
+                    default:
+                        if (!span) {
+                            $el.val(val);
+                        } else {
+                            $el.html(val);
+                        }
+                }
+            });
+            Materialize.updateTextFields();
+        }
+
+        function validaForm(idForm) {
+            var ok = true;
+            $("#" + idForm + " .validate").each(function () {
+                if (($(this).hasClass("invalid")) || ($(this).val() == "")) {
+                    $(this).addClass("invalid");
+                    setToast("Preencha os campos corretamente.");
+                    ok = false;
+                    return false;
+                }
+            });
+            return ok;
+        }
+
+        function setDeletarModal(id) {
+            $("#command-delete").val(id);
+        }
+
+        function getLoaderBar(idDiv) {
+            $("#" + idDiv).html("<div class=\"progress\"><div class=\"indeterminate\"></div></div>");
+        }
+
+        function removeLoader() {
+            $(".progress").remove();
+        }
+
+        function setToast(msg) {
+            $('.toast').remove();
+            Materialize.toast(msg, 4000);
+        }
+
 
     </script>
     <body>
-        <nav class="teal" role="navigation">
-            <div class="nav-wrapper container">
-                <a id="logo-container" href="#" class="brand-logo">Logo</a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="vagas.jsp">Vagas</a></li>
-                    <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
-                </ul>
-                <ul id="nav-mobile" class="side-nav">
-                    <li><a href="#">Navbar Link</a></li>
-                </ul>
-                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+        <main style="padding-bottom: 64px;">
+            <nav class="teal" role="navigation">
+                <div class="nav-wrapper container">
+                    <a id="logo-container" href="#" class="brand-logo">Logo</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="vagas.jsp">Vagas</a></li>
+                        <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
+                    </ul>
+                    <ul id="nav-mobile" class="side-nav">
+                        <li><a href="#">Navbar Link</a></li>
+                    </ul>
+                    <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+                </div>
+            </nav> 
+        </main>
+        <div id="modal-deletar" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <input id="command-delete" type="hidden" value="0" />
+                <h5>Confirma exclusão?</h5>
             </div>
-        </nav>    
-
+            <div class="modal-footer">
+                <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat lnkConfExcluir">Sim</a>
+                <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Não</a>
+            </div>
+        </div>

@@ -12,14 +12,14 @@
         </thead>
     </table>
 </div>
-<div id="modal-cadastro" class="modal modal-fixed-footer"> 
+<div id="modal-cadastro" class="modal"> 
     <div class="modal-content">
         <h4>Novo registro</h4>
         <div class="row margin-0">
             <form id="formCadastro" class="col s12">
-                <input id="command" type="hidden" value="0" name="id"/>
+                <input id="command" type="hidden" type="text" name="id"/>
                 <div class="row margin-0">
-                    <div class="input-field col s2">
+                    <div class="input-field col s12">
                         <input id="txtNome" type="text" class="validate" name="nome">
                         <label for="txtNome">Nome</label>
                     </div>
@@ -28,11 +28,17 @@
         </div>
     </div>
     <div class="modal-footer">
+        <div class="left" id="dvMsg">
+        </div>
         <a href="#" class="modal-action waves-effect waves-teal btn-flat lnkSalvar">Salvar</a>
         <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Fechar</a>
     </div>
 </div>
 <script type="text/javascript">
+    var form = "formCadastro";
+    var servlet = "ProcessaCadVagaCategoria"
+    var dvMsg = "dvMsg";
+    
     $(document).ready(function () {
         carregaPagina();
     });
@@ -57,17 +63,42 @@
         });
 
         $("#lnkNovo").on('click', function () {
-            novo("formCadastro", 0);
+            novo(form, 0);
         });
     }
 
+    function novo(form, id) {
+        $('#' + form)[0].reset();
+        $("#command").val("0");
+        $('.modal-content').removeClass("none");
+        Materialize.updateTextFields();
+    }
+
+    function salvar() {
+        var tipoServlet = "INSERT";
+        if (validaForm(form)) {
+            getLoaderBar(dvMsg);
+            $.ajax({
+                url: servlet + "?tipoServlet=" + tipoServlet,
+                type: "post",
+                data: $("#" + form).serialize(),
+                success: function (data) {
+                    $("#command").val(data.id);
+                    setToast("Dados salvos com sucesso!");
+                    getList();
+                    $('#modal-cadastro').modal('close');
+                    removeLoader();
+                }
+            });
+        }
+    }
+
     function getList() {
-        var tipoServelet = "GETLIST";
+        var tipoServlet = "GETLIST";
         $('#lvLista').DataTable({
             destroy: true,
             stateSave: true,
-            "ajax": "ProcessaCadVagaCategoria?tipoServelet=" + tipoServelet,
-
+            "ajax": servlet + "?tipoServlet=" + tipoServlet,
             "columns": [
                 {"data": "nome"},
                 {"data": "Ações"}
@@ -83,6 +114,39 @@
                                 "<a class=\"lnkDelete\" href=\"#modal-deletar\" data-id=\"" + full.id + "\"><i class=\"material-icons\">delete</i></a></div>";
                     }
                 }]
+        });
+    }
+
+    function getDetails(id) {
+        var tipoServlet = "GETBYID";
+        $('#' + form)[0].reset();
+        getLoaderBar(dvMsg);
+        $('.modal-content').addClass("none");
+        $.ajax({
+            url: servlet + "?tipoServlet=" + tipoServlet+"&id="+id,
+            type: "get",
+            data: null,
+            success: function (data) {
+                data = JSON.parse(data);
+                JsonToForm(form, data);
+                $("#command").val(data.id);
+                removeLoader();
+                $('.modal-content').removeClass("none");
+            }
+        });
+    }
+
+    function deletar(id) {
+        var tipoServlet = "DELETE";
+        $.ajax({
+            url: servlet + "?tipoServlet=" + tipoServlet+"&id="+id,
+            type: "post",
+            success: function (data) {
+                getList();
+            },
+            error: function(data){
+                setToast("Não é possível deletar!");
+            }
         });
     }
 

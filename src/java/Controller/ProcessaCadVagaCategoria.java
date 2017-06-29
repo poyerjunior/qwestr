@@ -48,26 +48,62 @@ public class ProcessaCadVagaCategoria extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        String tipoServelet = request.getParameter("tipoServelet");
-        String jsonA = "";
-        if ("GETLIST".equals(tipoServelet)) {
-            VagaCategoriaDAO VagaCategoriaDAO = new VagaCategoriaDAO();
-            List<VagaCategoria> lstVagaCategoria = new ArrayList();
-            JsonObject jsonRetorno = new JsonObject();
+        List<VagaCategoria> lstVagaCategoria = new ArrayList();
+        VagaCategoriaDAO VagaCategoriaDAO = new VagaCategoriaDAO();
+        VagaCategoria VagaCategoria = new VagaCategoria();
+        Gson gson = new Gson();
+        JsonObject jsonRetorno = new JsonObject();
+
+        String tipoServlet = request.getParameter("tipoServlet");
+        if ("GETLIST".equals(tipoServlet)) {
 
             try {
                 lstVagaCategoria = VagaCategoriaDAO.getLista();
 
-                Gson gson = new Gson();
                 String data = gson.toJson(lstVagaCategoria);
-                
+
                 jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
                 out.println(jsonRetorno);
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(ProcessaCadVagaCategoria.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //out.println(jsonA);
+        }
+
+        //SE FOR UMA INSERÇÃO OU EDIÇÃO CAI AQUI
+        if ("INSERT".equals(tipoServlet)) {
+            //INDEPENDETE SE FOR EDIÇÃO O0U ISNERÇÃO, SALVA OS DADOS NAS VARIAVEIS E MONTA O OBJETO
+            int id = Integer.parseInt(request.getParameter("id"));
+            String nome = request.getParameter("nome");
+
+            VagaCategoria.setId(id);
+            VagaCategoria.setNome(nome);
+            //SE FOR INSERT, INSERE O OBJETO, SE FOR UPDATE, ALTERA O OBJ
+            if (id == 0) {
+                VagaCategoriaDAO.insert(VagaCategoria);
+            } else {
+                VagaCategoriaDAO.update(VagaCategoria);
+            }
+        }
+
+        if ("GETBYID".equals(tipoServlet)) {
+
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            try {
+                VagaCategoria = VagaCategoriaDAO.getById(id);
+                String data = gson.toJson(VagaCategoria);
+                out.println(data);
+
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ProcessaCadVagaCategoria.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if ("DELETE".equals(tipoServlet)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            VagaCategoriaDAO.delete(id);
         }
     }
 

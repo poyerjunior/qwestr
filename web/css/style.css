@@ -602,3 +602,21 @@ footer.page-footer {
 .lnkDelete {
     margin: 0px 3px;
 }
+
+#modal-deletar {
+    width: 35%;
+    padding: 0;
+    height: 165px;
+}
+
+@media only screen and (max-width: 992px) {
+    #modal-deletar {
+        width: 60%;
+    }
+}
+
+#dvMsg{
+    width: 300px;
+    padding: 12px 0px;
+}
+
