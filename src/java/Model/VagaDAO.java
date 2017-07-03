@@ -117,6 +117,7 @@ public class VagaDAO {
 
                 Vaga.setId(rs.getInt("id"));
                 Vaga.setNome(rs.getString("nome"));
+                Vaga.setDescricao(rs.getString("descricao"));
                 Vaga.setProva(rs.getBoolean("prova"));
                 VagaCategoriaDAO vcDAO = new VagaCategoriaDAO();
                 EmpresaDAO eDAO = new EmpresaDAO();
@@ -166,6 +167,7 @@ public class VagaDAO {
             while (rs.next()) {
                 Vaga.setId(rs.getInt("id"));
                 Vaga.setNome(rs.getString("nome"));
+                Vaga.setDescricao(rs.getString("descricao"));
                 Vaga.setProva(rs.getBoolean("prova"));
                 VagaCategoriaDAO vcDAO = new VagaCategoriaDAO();
                 EmpresaDAO eDAO = new EmpresaDAO();

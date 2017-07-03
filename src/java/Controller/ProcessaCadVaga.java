@@ -5,8 +5,11 @@
  */
 package Controller;
 
-import Model.VagaCategoria;
-import Model.VagaCategoriaDAO;
+import Model.Vaga;
+import Model.VagaDAO;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -19,18 +22,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-//import org.json.simple.JSONArray;
-//import org.json.simple.JSONObject;
 
 /**
  *
  * @author pcstr
  */
-@WebServlet(name = "ProcessaCadVagaCategoria", urlPatterns = {"/ProcessaCadVagaCategoria"})
-public class ProcessaCadVagaCategoria extends HttpServlet {
+@WebServlet(name = "ProcessaCadVaga", urlPatterns = {"/ProcessaCadVaga"})
+public class ProcessaCadVaga extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,9 +44,9 @@ public class ProcessaCadVagaCategoria extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        List<VagaCategoria> lstVagaCategoria = new ArrayList();
-        VagaCategoriaDAO VagaCategoriaDAO = new VagaCategoriaDAO();
-        VagaCategoria VagaCategoria = new VagaCategoria();
+        List<Vaga> lstVagaCategoria = new ArrayList();
+        VagaDAO VagaDAO = new VagaDAO();
+        Vaga Vaga = new Vaga();
         Gson gson = new Gson();
         JsonObject jsonRetorno = new JsonObject();
 
@@ -56,7 +54,7 @@ public class ProcessaCadVagaCategoria extends HttpServlet {
         if ("GETLIST".equals(tipoServlet)) {
 
             try {
-                lstVagaCategoria = VagaCategoriaDAO.getLista();
+                lstVagaCategoria = VagaDAO.getLista();
 
                 String data = gson.toJson(lstVagaCategoria);
 
@@ -64,44 +62,8 @@ public class ProcessaCadVagaCategoria extends HttpServlet {
                 out.println(jsonRetorno);
 
             } catch (SQLException ex) {
-                Logger.getLogger(ProcessaCadVagaCategoria.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-
-        //SE FOR UMA INSERÇÃO OU EDIÇÃO CAI AQUI
-        if ("INSERT".equals(tipoServlet)) {
-            //INDEPENDETE SE FOR EDIÇÃO O0U ISNERÇÃO, SALVA OS DADOS NAS VARIAVEIS E MONTA O OBJETO
-            int id = Integer.parseInt(request.getParameter("id"));
-            String nome = request.getParameter("nome");
-
-            VagaCategoria.setId(id);
-            VagaCategoria.setNome(nome);
-            //SE FOR INSERT, INSERE O OBJETO, SE FOR UPDATE, ALTERA O OBJ
-            if (id == 0) {
-                VagaCategoriaDAO.insert(VagaCategoria);
-            } else {
-                VagaCategoriaDAO.update(VagaCategoria);
-            }
-        }
-
-        if ("GETBYID".equals(tipoServlet)) {
-
-            int id = Integer.parseInt(request.getParameter("id"));
-
-            try {
-                VagaCategoria = VagaCategoriaDAO.getById(id);
-                String data = gson.toJson(VagaCategoria);
-                out.println(data);
-
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProcessaCadVagaCategoria.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if ("DELETE".equals(tipoServlet)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-
-            VagaCategoriaDAO.delete(id);
         }
     }
 
