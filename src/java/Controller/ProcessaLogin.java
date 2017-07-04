@@ -7,6 +7,8 @@ package Controller;
 
 import Model.Candidato;
 import Model.CandidatoDAO;
+import Model.Empresa;
+import Model.EmpresaDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -39,26 +41,35 @@ public class ProcessaLogin extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        
+
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
-        
+
         Candidato candidato = new Candidato();
         CandidatoDAO candidatoDAO = new CandidatoDAO();
-        
-        if((email != "") && (senha != "")){
+
+        if ((!"".equals(email)) && (!"".equals(senha))) {
             try {
                 candidato = candidatoDAO.verificaLogin(email, senha);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ProcessaLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            if(candidato.getId() != 0){
+
+            if (candidato.getId() != 0) {
                 HttpSession session = request.getSession();
                 session.setAttribute("usuario", candidato);
-                out.println("vagas.jsp");    
-            }else{
-                out.println("ERRO");
+                out.println("vagas.jsp");
+            } else {
+                Empresa Empresa = new Empresa();
+                EmpresaDAO EmpresaDAO = new EmpresaDAO();
+                try {
+                    Empresa = EmpresaDAO.verificaLogin(email, senha);
+                    HttpSession session = request.getSession();
+                    session.setAttribute("empresa", Empresa);
+                    out.println("vagas.jsp");
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProcessaLogin.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

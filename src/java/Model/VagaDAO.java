@@ -22,8 +22,8 @@ import java.util.logging.Logger;
  */
 public class VagaDAO {
 
-    private String stmtInsert = "insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id, Prova_id) values(?,?,?,?,?,?);";
-    private String stmtUpdate = "update vaga set nome=?, descricao=?, prova=?, VagaCategoria_id=?, Empresa_id=?, Prova_id=? where id=?";
+    private String stmtInsert = "insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values(?,?,?,?,?);";
+    private String stmtUpdate = "update vaga set nome=?, descricao=?, prova=?, VagaCategoria_id=?, Empresa_id=? where id=?";
     private String stmtSelect = "select * from vaga";
     private String stmtSelectById = "select * from vaga where id =?";
     private String stmtDelete = "delete from vaga where id = ?";
@@ -41,7 +41,6 @@ public class VagaDAO {
             stmt.setBoolean(3, Vaga.isProva());
             stmt.setInt(4, Vaga.getVagaCategoria().getId());
             stmt.setInt(5, Vaga.getEmpresa().getId());
-            stmt.setInt(6, Vaga.getProva().getId());
 
             stmt.execute();
             ResultSet rs = stmt.getGeneratedKeys();
@@ -80,8 +79,7 @@ public class VagaDAO {
             stmt.setBoolean(3, Vaga.isProva());
             stmt.setInt(4, Vaga.getVagaCategoria().getId());
             stmt.setInt(5, Vaga.getEmpresa().getId());
-            stmt.setInt(6, Vaga.getProva().getId());
-            stmt.setInt(7, Vaga.getId());
+            stmt.setInt(6, Vaga.getId());
             stmt.executeUpdate();
 
         } catch (SQLException e) {

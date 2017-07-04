@@ -15,7 +15,7 @@
         </thead>
     </table>
 </div>
-<div id="modal-cadastro" class="modal"> 
+<div id="modal-cadastro" class="modal modal-fixed-footer"> 
     <div class="modal-content">
         <h4>Novo registro</h4>
         <div class="row margin-0">
@@ -26,6 +26,33 @@
                         <input id="txtNome" type="text" class="validate" name="nome">
                         <label for="txtNome">Nome</label>
                     </div>
+                </div>
+                <div class="row margin-0">
+                    <div class="input-field col s12">
+                        <textarea id="txtDescricao" class="materialize-textarea" maxlength="4000" data-length="4000" name="descricao"></textarea>
+                        <label for="txtDescricao">Descriçãoo</label>
+                    </div>
+                </div>
+                <div class="row margin-0">
+                    <div class="input-field col s12">
+                        <select id="ddlVagaCategoria" class="select-material" name="vagacategoria">
+                        </select>
+                        <label>Categoria</label>
+                    </div>
+                </div>
+                <div class="row" style="margin-left: 12px;">
+                    <label>Realizar prova?</label>
+                </div>
+                <div class="row" style="margin-left: 12px;">
+                    <div class="switch">
+                        <label>
+                            Não
+                            <input id="chkProva" type="checkbox" name="prova">
+                            <span class="lever"></span>
+                            Sim
+                        </label>
+                    </div>
+                    <div class="clearfixr"></div>
                 </div>
             </form>
         </div>
@@ -49,6 +76,7 @@
     function carregaPagina() {
         var modalID = "modal-cadastro";
 
+        getComboVagaCategoria();
         getList();
 
         $(".menu-empresa").addClass("active");
@@ -74,6 +102,8 @@
         $('#' + form)[0].reset();
         $("#command").val("0");
         $('.modal-content').removeClass("none");
+        $('#txtDescricao').trigger('autoresize');
+        $('#ddlVagaCategoria').material_select();
         Materialize.updateTextFields();
     }
 
@@ -138,6 +168,8 @@
     function getDetails(id) {
         var tipoServlet = "GETBYID";
         $('#' + form)[0].reset();
+        $('#txtDescricao').trigger('autoresize');
+        Materialize.updateTextFields();
         getLoaderBar(dvMsg);
         $('.modal-content').addClass("none");
         $.ajax({
@@ -147,9 +179,30 @@
             success: function (data) {
                 data = JSON.parse(data);
                 JsonToForm(form, data);
+                $('#ddlVagaCategoria').val(data.VagaCategoria.id);
                 $("#command").val(data.id);
+                $('#ddlVagaCategoria').material_select();
+                $('#chkProva').prop('checked', data.prova);
                 removeLoader();
                 $('.modal-content').removeClass("none");
+            }
+        });
+    }
+
+    function getComboVagaCategoria() {
+        var tipoServlet = "GETCOMBOVAGACATEGORIA";
+        $.ajax({
+            url: servlet + "?tipoServlet=" + tipoServlet,
+            type: "get",
+            data: null,
+            success: function (data) {
+                data = JSON.parse(data);
+                var options = "<option disabled disabled selected value=\"0\">Selecione a categoria</option>";
+                jQuery.each(data.data, function (i, json) {
+                    options += "<option value=\""+json.id+"\">"+json.nome+"</option>";
+                });
+                $("#ddlVagaCategoria").html(options);
+                updateSelect();
             }
         });
     }
