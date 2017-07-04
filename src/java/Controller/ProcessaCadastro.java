@@ -52,8 +52,7 @@ public class ProcessaCadastro extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
-        
-        String appPath = request.getServletContext().getRealPath("");
+        String appPath = request.getServletContext().getRealPath("").replace("\\build\\", "\\");
         // constructs path of the directory to save uploaded file
         String savePath = appPath + File.separator + SAVE_DIR;
          

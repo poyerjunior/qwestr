@@ -40,7 +40,7 @@
             $(".rgcnhmask").mask("99999999999999999999");
             $(".cepmask").mask("99.999-999");
             $(".cnpjmask").mask("99.999.999/9999-99");
-            
+
             updateSelect();
 
             $(".lnkConfExcluir").on('click', function () {
@@ -99,17 +99,23 @@
             $('.toast').remove();
             Materialize.toast(msg, 4000);
         }
-        
-        function updateSelect(){
+
+        function updateSelect() {
             $('.select-material').material_select('destroy');
             $('.select-material').material_select();
+        }
+
+        function verfLogado(data) {
+            if ($.trim(data) == "ERRO_DESLOGAR") {
+                window.location = "/NiceVagas";
+            }
         }
 
 
     </script>
     <body>
         <main style="padding-bottom: 64px;">
-            <nav class="teal none" role="navigation">
+            <nav class="teal" role="navigation">
                 <div class="nav-wrapper container">
                     <a id="logo-container" href="#" class="brand-logo">Logo</a>
                     <ul class="right hide-on-med-and-down">

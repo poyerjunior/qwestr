@@ -241,7 +241,6 @@
                     resetModalCadastro(this.value);
                 });
 
-
                 // Add events
                 $('input[type=file]').on('change', prepareUpload);
                 $('#formCadastro').on('submit', uploadFiles);

@@ -51,93 +51,99 @@ public class ProcessaCadVaga extends HttpServlet {
         HttpSession session = request.getSession();
         Empresa empresa = (Empresa) session.getAttribute("empresa");
 
-        List<Vaga> lstVaga = new ArrayList();
-        VagaDAO VagaDAO = new VagaDAO();
-        Vaga Vaga = new Vaga();
-        VagaCategoriaDAO VagaCategoriaDAO = new VagaCategoriaDAO();
-        VagaCategoria VagaCategoria = new VagaCategoria();
-        Gson gson = new Gson();
-        JsonObject jsonRetorno = new JsonObject();
+        if (empresa != null) {
 
-        String tipoServlet = request.getParameter("tipoServlet");
-        if ("GETLIST".equals(tipoServlet)) {
+            List<Vaga> lstVaga = new ArrayList();
+            VagaDAO VagaDAO = new VagaDAO();
+            Vaga Vaga = new Vaga();
+            VagaCategoriaDAO VagaCategoriaDAO = new VagaCategoriaDAO();
+            VagaCategoria VagaCategoria = new VagaCategoria();
+            Gson gson = new Gson();
+            JsonObject jsonRetorno = new JsonObject();
 
-            try {
-                lstVaga = VagaDAO.getLista();
+            String tipoServlet = request.getParameter("tipoServlet");
+            if ("GETLIST".equals(tipoServlet)) {
 
-                String data = gson.toJson(lstVaga);
+                try {
+                    lstVaga = VagaDAO.getLista();
 
-                jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
-                out.println(jsonRetorno);
+                    String data = gson.toJson(lstVaga);
 
-            } catch (SQLException ex) {
-                Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
+                    jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
+                    out.println(jsonRetorno);
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+
+            if ("INSERT".equals(tipoServlet)) {
+
+                //INDEPENDETE SE FOR EDIÇÃO O0U ISNERÇÃO, SALVA OS DADOS NAS VARIAVEIS E MONTA O OBJETO
+                int id = Integer.parseInt(request.getParameter("id"));
+                String nome = request.getParameter("nome");
+                String descricao = request.getParameter("descricao");
+                int id_vagacategoria = Integer.parseInt(request.getParameter("vagacategoria"));
+                String onoff = request.getParameter("prova");
+                boolean prova = "on".equals(onoff);
+
+                Vaga.setId(id);
+                Vaga.setNome(nome);
+                Vaga.setDescricao(descricao);
+                Vaga.setProva(prova);
+                Vaga.setEmpresa(empresa);
+                try {
+                    Vaga.setVagaCategoria(VagaCategoriaDAO.getById(id_vagacategoria));
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //SE FOR INSERT, INSERE O OBJETO, SE FOR UPDATE, ALTERA O OBJ
+                if (id == 0) {
+                    VagaDAO.insert(Vaga);
+                } else {
+                    VagaDAO.update(Vaga);
+                }
+            }
+
+            if ("GETBYID".equals(tipoServlet)) {
+
+                int id = Integer.parseInt(request.getParameter("id"));
+
+                try {
+                    Vaga = VagaDAO.getById(id);
+                    String data = gson.toJson(Vaga);
+                    out.println(data);
+
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if ("GETCOMBOVAGACATEGORIA".equals(tipoServlet)) {
+                List<VagaCategoria> lstVagaCategoria = new ArrayList();
+
+                try {
+                    lstVagaCategoria = VagaCategoriaDAO.getLista();
+
+                    String data = gson.toJson(lstVagaCategoria);
+
+                    jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
+                    out.println(jsonRetorno);
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProcessaCadVagaCategoria.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if ("DELETE".equals(tipoServlet)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+
+                VagaDAO.delete(id);
+            }
+        }else{
+            out.println("ERRO_DESLOGAR");
         }
 
-        if ("INSERT".equals(tipoServlet)) {
-
-            //INDEPENDETE SE FOR EDIÇÃO O0U ISNERÇÃO, SALVA OS DADOS NAS VARIAVEIS E MONTA O OBJETO
-            int id = Integer.parseInt(request.getParameter("id"));
-            String nome = request.getParameter("nome");
-            String descricao = request.getParameter("descricao");
-            int id_vagacategoria = Integer.parseInt(request.getParameter("vagacategoria"));
-            String onoff = request.getParameter("prova");
-            boolean prova = "on".equals(onoff);
-
-            Vaga.setId(id);
-            Vaga.setNome(nome);
-            Vaga.setDescricao(descricao);
-            Vaga.setProva(prova);
-            Vaga.setEmpresa(empresa);
-            try {
-                Vaga.setVagaCategoria(VagaCategoriaDAO.getById(id_vagacategoria));
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            //SE FOR INSERT, INSERE O OBJETO, SE FOR UPDATE, ALTERA O OBJ
-            if (id == 0) {
-                VagaDAO.insert(Vaga);
-            } else {
-                VagaDAO.update(Vaga);
-            }
-        }
-
-        if ("GETBYID".equals(tipoServlet)) {
-
-            int id = Integer.parseInt(request.getParameter("id"));
-
-            try {
-                Vaga = VagaDAO.getById(id);
-                String data = gson.toJson(Vaga);
-                out.println(data);
-
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if ("GETCOMBOVAGACATEGORIA".equals(tipoServlet)) {
-            List<VagaCategoria> lstVagaCategoria = new ArrayList();
-
-            try {
-                lstVagaCategoria = VagaCategoriaDAO.getLista();
-
-                String data = gson.toJson(lstVagaCategoria);
-
-                jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
-                out.println(jsonRetorno);
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ProcessaCadVagaCategoria.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        if ("DELETE".equals(tipoServlet)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-
-            VagaDAO.delete(id);
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

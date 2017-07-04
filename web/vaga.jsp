@@ -68,31 +68,23 @@
     var form = "formCadastro";
     var servlet = "ProcessaCadVaga"
     var dvMsg = "dvMsg";
-
     $(document).ready(function () {
         carregaPagina();
     });
-
     function carregaPagina() {
         var modalID = "modal-cadastro";
-
         getComboVagaCategoria();
         getList();
-
         $(".menu-empresa").addClass("active");
-
         $('body').on('click', 'a.lnkEdit', function () {
             getDetails($(this).data("id"));
         });
-
         $('body').on('click', 'a.lnkDelete', function () {
             setDeletarModal($(this).data("id"));
         });
-
         $("#" + modalID + " .lnkSalvar").on('click', function () {
             salvar();
         });
-
         $("#lnkNovo").on('click', function () {
             novo(form, 0);
         });
@@ -116,6 +108,7 @@
                 type: "post",
                 data: $("#" + form).serialize(),
                 success: function (data) {
+                    verfLogado(data);
                     $("#command").val(data.id);
                     setToast("Dados salvos com sucesso!");
                     getList();
@@ -177,6 +170,7 @@
             type: "get",
             data: null,
             success: function (data) {
+                verfLogado(data);
                 data = JSON.parse(data);
                 JsonToForm(form, data);
                 $('#ddlVagaCategoria').val(data.VagaCategoria.id);
@@ -196,10 +190,11 @@
             type: "get",
             data: null,
             success: function (data) {
+                verfLogado(data);
                 data = JSON.parse(data);
                 var options = "<option disabled disabled selected value=\"0\">Selecione a categoria</option>";
                 jQuery.each(data.data, function (i, json) {
-                    options += "<option value=\""+json.id+"\">"+json.nome+"</option>";
+                    options += "<option value=\"" + json.id + "\">" + json.nome + "</option>";
                 });
                 $("#ddlVagaCategoria").html(options);
                 updateSelect();
