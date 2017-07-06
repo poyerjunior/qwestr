@@ -241,6 +241,12 @@
                     resetModalCadastro(this.value);
                 });
 
+                $("#formLogin input").on('keyup', function (e) {
+                    if (e.which == 13) {
+                        logar();
+                    }
+                });
+
                 // Add events
                 $('input[type=file]').on('change', prepareUpload);
                 $('#formCadastro').on('submit', uploadFiles);
