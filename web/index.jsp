@@ -35,7 +35,7 @@
             $(".rgcnhmask").mask("99999999999999999999");
             $(".cepmask").mask("99.999-999");
             $(".cnpjmask").mask("99.999.999/9999-99");
-            
+
         }
 
     </script>
@@ -159,11 +159,12 @@
                 <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Fechar</a>
             </div>
         </div>
-        <div id="modal-cadastro" class="modal">
+        <div id="modal-cadastro" class="modal modal-fixed-footer">
             <div class="modal-content">
                 <h4>Cadastre-se</h4>
                 <div class="row">
                     <form id="formCadastro" class="col s12">
+                        <input id="command" type="hidden" type="text" name="id"/>
                         <div class="row">
                             <span>
                                 <input name="grouptipo" type="radio" id="rblCandidato" checked="checked" value="0"/>
@@ -205,10 +206,10 @@
                                 <div class="file-field input-field">
                                     <div class="btn">
                                         <span>Currículo</span>
-                                        <input id="txtCurriculo" type="file" name="caminho">
+                                        <input id="txtCurriculo" type="file" name="caminho" class="validate">
                                     </div>
                                     <div class="file-path-wrapper">
-                                        <input class="file-path" type="text" name="nomefile">
+                                        <input id="txtCurriculo2" class="file-path" type="text" name="nomefile" class="validate">
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +220,6 @@
                                 <label for="txtCnpj">Cnpj</label>
                             </div>
                         </div>
-                        <input type="submit" value="Upload" />
                     </form>
                 </div>
             </div>
@@ -244,53 +244,7 @@
                 // Add events
                 $('input[type=file]').on('change', prepareUpload);
                 $('#formCadastro').on('submit', uploadFiles);
-            }
 
-            function prepareUpload(event)
-            {
-                files = event.target.files;
-            }
-
-            function uploadFiles(event)
-            {
-                event.stopPropagation(); // Stop stuff happening
-                event.preventDefault(); // Totally stop stuff happening
-
-                // START A LOADING SPINNER HERE
-
-                // Create a formdata object and add the files
-                var data = new FormData();
-                $.each(files, function (key, value)
-                {
-                    data.append(key, value);
-                });
-                console.log(data);
-                $.ajax({
-                    url: 'ProcessaCadastro',
-                    type: 'POST',
-                    data: data,
-                    cache: false,
-                    processData: false, // Don't process the files
-                    contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-                    success: function (data, textStatus, jqXHR)
-                    {
-                        if (typeof data.error === 'undefined')
-                        {
-                            // Success so call function to process the form
-                            submitForm(event, data);
-                        } else
-                        {
-                            // Handle errors here
-                            console.log('ERRORS: ' + data.error);
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown)
-                    {
-                        // Handle errors here
-                        console.log('ERRORS: ' + textStatus);
-                        // STOP LOADING SPINNER
-                    }
-                });
             }
 
             function logar() {
@@ -326,11 +280,64 @@
                             if ($.trim(data) == "ERRO_USUARIO_CADASTRADO") {
                                 setMsg('E-mail já utilizado!');
                             } else {
-                                setMsg('Dados cadastrados com sucesso!');
+                                if ($('input[name="grouptipo"]:checked').val() == "0") {
+                                    data = JSON.parse(data);
+                                    $("#command").val(data.id);
+                                    $("#formCadastro").submit();
+                                } else {
+                                    $('#modal-cadastro').modal('close');
+                                    setMsg('Emrpesa cadastrada com sucesso!');
+                                }
                             }
                         }
                     });
                 }
+            }
+
+            function prepareUpload(event) {
+                files = event.target.files;
+            }
+
+            function uploadFiles(event) {
+                event.stopPropagation(); // Stop stuff happening
+                event.preventDefault(); // Totally stop stuff happening
+
+                // START A LOADING SPINNER HERE
+
+                // Create a formdata object and add the files
+                var data = new FormData();
+                $.each(files, function (key, value)
+                {
+                    data.append(key, value);
+                });
+                $.ajax({
+                    url: 'ProcessaUpload?id=' + $("#command").val(),
+                    type: 'POST',
+                    data: data,
+                    cache: false,
+                    processData: false, // Don't process the files
+                    contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                    success: function (data, textStatus, jqXHR)
+                    {
+                        if (typeof data.error === 'undefined')
+                        {
+                            // Success so call function to process the form
+                            //submitForm(event, data);
+                            $('#modal-cadastro').modal('close');
+                            setMsg('Dados cadastrados com sucesso!');
+                        } else
+                        {
+                            // Handle errors here
+                            console.log('ERRORS: ' + data.error);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown)
+                    {
+                        // Handle errors here
+                        console.log('ERRORS: ' + textStatus);
+                        // STOP LOADING SPINNER
+                    }
+                });
             }
 
             function verfSenha() {
@@ -341,18 +348,23 @@
             }
 
             function resetModalCadastro(id) {
+                $("#command").val(0);
                 if (id == '0') {
                     $('.row-candidato').removeClass('none');
                     $('.row-empresa').addClass('none');
                     $('#txtCnpj').val("");
                     $("#txtCnpj").removeClass("validate");
                     $("#txtCpf").addClass("validate");
+                    $("#txtCurriculo").addClass("validate");
+                    $("#txtCurriculo2").addClass("validate");
                 } else if (id == '1') {
                     $('.row-candidato').addClass('none');
                     $('.row-empresa').removeClass('none');
                     $('#txtCpf').val("");
                     $("#txtCnpj").addClass("validate");
                     $("#txtCpf").removeClass("validate");
+                    $("#txtCurriculo").removeClass("validate");
+                    $("#txtCurriculo2").removeClass("validate");
                 }
             }
 
