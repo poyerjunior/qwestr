@@ -120,14 +120,18 @@
                     <a id="logo-container" href="#" class="brand-logo">Logo</a>
                     <ul class="right hide-on-med-and-down">
                         <li><a href="vagas.jsp">Vagas</a></li>
-                        <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
+                        <li><a href="vagacategoria.jsp">Categoria de Vaga</a></li>
+                        <li><a href="vaga.jsp">Cadastro de Vagas</a></li>
                     </ul>
-                    <ul id="nav-mobile" class="side-nav">
-                        <li><a href="#">Navbar Link</a></li>
-                    </ul>
+
                     <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
                 </div>
             </nav> 
+            <ul id="nav-mobile" class="side-nav">
+                <li><a href="vagas.jsp">Vagas</a></li>
+                <li><a href="vagacategoria.jsp">Categoria de Vaga</a></li>
+                <li><a href="vaga.jsp">Cadastro de Vagas</a></li>
+            </ul>
         </main>
         <div id="modal-deletar" class="modal modal-fixed-footer">
             <div class="modal-content">

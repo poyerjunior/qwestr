@@ -59,28 +59,32 @@
             type: "get",
             data: null,
             success: function (data) {
-                data = JSON.parse(data);
-
                 var result = "";
-                console.log(data);
-                jQuery.each(data.data, function (i, json) {
-                    result += "<div class=\"col s12 m4\">" +
-                            "<div class=\"card small\">" +
-                            "<a href=\"vagadetalhe.jsp?id=" + json.id + "\">" +
-                            "<div class=\"card-image waves-effect waves-block waves-light teal\" style=\"height: 60%;\">" +
-                            "</div>" +
-                            "</a>" +
-                            "<div class=\"card-content\">" +
-                            "<span class=\"card-title activator grey-text text-darken-4\">" + json.nome + "<i class=\"material-icons right\">more_vert</i></span>" +
-                            "<p><a href=\"vagadetalhe.jsp\">Ver vaga</a></p>" +
-                            "</div>" +
-                            "<div class=\"card-reveal\">" +
-                            "<span class=\"card-title grey-text text-darken-4\">" + json.nome + "<i class=\"material-icons right\">close</i></span>" +
-                            "<p>" + json.descricao + "</p>" +
-                            "</div>" +
-                            "</div>" +
-                            "</div>";
-                });
+                data = JSON.parse(data);
+                console.log(data.data);
+                if (data.data.length == 0) {
+                        result = "Nenhuma vaga encontrada."    
+                } else {
+                    jQuery.each(data.data, function (i, json) {
+                        result += "<div class=\"col s12 m4\">" +
+                                "<div class=\"card small\">" +
+                                "<a href=\"vagadetalhe.jsp?id=" + json.id + "\">" +
+                                "<div class=\"card-image waves-effect waves-block waves-light teal\" style=\"height: 60%;\">" +
+                                "</div>" +
+                                "</a>" +
+                                "<div class=\"card-content\">" +
+                                "<span class=\"card-title activator grey-text text-darken-4\">" + json.nome + "<i class=\"material-icons right\">more_vert</i></span>" +
+                                "<p><a href=\"vagadetalhe.jsp\">Ver vaga</a></p>" +
+                                "</div>" +
+                                "<div class=\"card-reveal\">" +
+                                "<span class=\"card-title grey-text text-darken-4\">" + json.nome + "<i class=\"material-icons right\">close</i></span>" +
+                                "<p>" + json.descricao + "</p>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>";
+                    });
+                }
+
                 removeLoader();
                 $(".content-vagas").html(result);
             }

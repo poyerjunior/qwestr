@@ -47,7 +47,7 @@
                     <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
                 </ul>
                 <ul id="nav-mobile" class="side-nav">
-                    <li><a href="#">Navbar Link</a></li>
+                    <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
                 </ul>
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
             </div>

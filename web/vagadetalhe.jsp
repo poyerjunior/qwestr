@@ -4,12 +4,9 @@
 --%>
 
 <jsp:include page="header.jsp"/>
-<div class="margin-nav-80">
-</div>
 <div class="container sombra margin margin-bt padding-50 cinza-claro">
     <div class="section">
-        <h4>Analista de sistemas</h4>
-        <p>Salário: <span>R$1.800,00</span></p> 
+        <h4>Nome</h4>
         <p>
             "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, 
             totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae 
