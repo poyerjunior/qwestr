@@ -18,20 +18,19 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author pcstr
+ * @author sergio.poyer
  */
-public class VagaDAO {
+public class CandidaturaDAO {
 
-    private String stmtInsert = "insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values(?,?,?,?,?);";
-    private String stmtUpdate = "update vaga set nome=?, descricao=?, prova=?, VagaCategoria_id=?, Empresa_id=? where id=?";
-    private String stmtSelect = "select * from vaga";
-    private String stmtSelectTop = "SELECT vaga.*, VagaCategoria.nome as vagacategorianome FROM vaga\n" +
-                                    "INNER JOIN VagaCategoria on VagaCategoria.id = vaga.VagaCategoria_id\n" +
-                                    "WHERE vaga.nome like ? OR descricao like ? OR VagaCategoria.nome like ? Order By vaga.nome ASC LIMIT ?";
-    private String stmtSelectById = "select * from vaga where id =?";
-    private String stmtDelete = "delete from vaga where id = ?";
+    private String stmtInsert = "insert into candidatura(data, Candidato_id, Vaga_id, aprovacao) values(?,?,?,?);";
+    private String stmtUpdate = "update candidatura set data=?, Candidato_id=?, Vaga_id=?, aprovacao=? where id=?";
+    private String stmtSelect = "select * from candidatura";
+    private String stmtSelectByIdVaga = "select * from candidatura where Vaga_id = ?";
+    private String stmtSelectById = "select * from candidatura where id =?";
+    private String stmtDelete = "delete from candidatura where id = ?";
+    private String stmtAprovar = "update candidatura set aprovacao=? where id=?";
 
-    public void insert(Vaga Vaga) {
+    public void insert(Candidatura Candidatura) {
         Connection con = null;
         PreparedStatement stmt = null;
         int idObjeto = 0;
@@ -39,19 +38,19 @@ public class VagaDAO {
             con = ConnectionFactory.getConnection();
             stmt = con.prepareStatement(stmtInsert, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setString(1, Vaga.getNome());
-            stmt.setString(2, Vaga.getDescricao());
-            stmt.setBoolean(3, Vaga.isProva());
-            stmt.setInt(4, Vaga.getVagaCategoria().getId());
-            stmt.setInt(5, Vaga.getEmpresa().getId());
+            stmt.setDate(1, Candidatura.getDate());
+            stmt.setInt(2, Candidatura.getCandidato().getId());
+            stmt.setInt(3, Candidatura.getIdVaga());
+            stmt.setBoolean(4, Candidatura.isAprovacao());
 
             stmt.execute();
+            //Seta o id 
             ResultSet rs = stmt.getGeneratedKeys();
             while (rs.next()) {
                 idObjeto = rs.getInt(1);
             }
 
-            Vaga.setId(idObjeto);
+            Candidatura.setId(idObjeto);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -69,7 +68,7 @@ public class VagaDAO {
         }
     }
 
-    public void update(Vaga Vaga) {
+    public void update(Candidatura Candidatura) {
         com.mysql.jdbc.Connection con = null;
         PreparedStatement stmt = null;
         try {
@@ -77,12 +76,11 @@ public class VagaDAO {
             con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
             stmt = con.prepareStatement(stmtUpdate);
 
-            stmt.setString(1, Vaga.getNome());
-            stmt.setString(2, Vaga.getDescricao());
-            stmt.setBoolean(3, Vaga.isProva());
-            stmt.setInt(4, Vaga.getVagaCategoria().getId());
-            stmt.setInt(5, Vaga.getEmpresa().getId());
-            stmt.setInt(6, Vaga.getId());
+            stmt.setDate(1, Candidatura.getDate());
+            stmt.setInt(2, Candidatura.getCandidato().getId());
+            stmt.setInt(3, Candidatura.getIdVaga());
+            stmt.setBoolean(4, Candidatura.isAprovacao());
+            stmt.setInt(5, Candidatura.getId());
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -100,67 +98,8 @@ public class VagaDAO {
             };
         }
     }
-    
-    public List<Vaga> getListaTop(String p1, int qtd) throws SQLException {
-        com.mysql.jdbc.Connection con = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
 
-        try {
-            con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
-            stmt = con.prepareStatement(stmtSelectTop);
-            stmt.setString(1, "%" +p1 +"%");
-            stmt.setString(2, "%" +p1 +"%");
-            stmt.setString(3, "%" +p1 +"%");
-            stmt.setInt(4, qtd);
-            rs = stmt.executeQuery();
-            List<Vaga> lstVaga = new ArrayList();
-
-            while (rs.next()) {
-                // criando o objeto Grupo
-                Vaga Vaga = new Vaga();
-
-                Vaga.setId(rs.getInt("id"));
-                Vaga.setNome(rs.getString("nome"));
-                Vaga.setDescricao(rs.getString("descricao"));
-                Vaga.setProva(rs.getBoolean("prova"));
-                VagaCategoriaDAO vcDAO = new VagaCategoriaDAO();
-                EmpresaDAO eDAO = new EmpresaDAO();
-                try {
-                    Vaga.setVagaCategoria(vcDAO.getById(rs.getInt("VagaCategoria_id")));
-                    Vaga.setEmpresa(eDAO.getById(rs.getInt("Empresa_id")));
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(VagaDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                CandidaturaDAO cDAO = new CandidaturaDAO();
-                Vaga.setLstcandidatura(cDAO.getListaByVaga(rs.getInt("id")));
-                lstVaga.add(Vaga);
-            }
-            return lstVaga;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                rs.close();
-            } catch (Exception ex) {
-                System.out.println("Erro ao fechar result set. Ex=" + ex.getMessage());
-            };
-            try {
-                stmt.close();
-            } catch (Exception ex) {
-                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
-            };
-            try {
-                con.close();
-            } catch (Exception ex) {
-                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
-            };
-        }
-
-    }
-
-    public List<Vaga> getLista() throws SQLException {
+    public List<Candidatura> getLista() throws SQLException {
         com.mysql.jdbc.Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -169,29 +108,81 @@ public class VagaDAO {
             con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
             stmt = con.prepareStatement(stmtSelect);
             rs = stmt.executeQuery();
-            List<Vaga> lstVaga = new ArrayList();
+            List<Candidatura> lstCandidatura = new ArrayList();
 
             while (rs.next()) {
                 // criando o objeto Grupo
-                Vaga Vaga = new Vaga();
+                Candidatura Candidatura = new Candidatura();
+                CandidatoDAO CandidatoDAO = new CandidatoDAO();
+                VagaDAO VagaDAO = new VagaDAO();
 
-                Vaga.setId(rs.getInt("id"));
-                Vaga.setNome(rs.getString("nome"));
-                Vaga.setDescricao(rs.getString("descricao"));
-                Vaga.setProva(rs.getBoolean("prova"));
-                VagaCategoriaDAO vcDAO = new VagaCategoriaDAO();
-                EmpresaDAO eDAO = new EmpresaDAO();
+                Candidatura.setId(rs.getInt("id"));
+                Candidatura.setDate(rs.getDate("data"));
                 try {
-                    Vaga.setVagaCategoria(vcDAO.getById(rs.getInt("VagaCategoria_id")));
-                    Vaga.setEmpresa(eDAO.getById(rs.getInt("Empresa_id")));
+                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id")));
+                    Candidatura.setIdVaga(rs.getInt("Vaga_id"));
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(VagaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CandidaturaDAO.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                CandidaturaDAO cDAO = new CandidaturaDAO();
-                Vaga.setLstcandidatura(cDAO.getListaByVaga(rs.getInt("id")));
-                lstVaga.add(Vaga);
+                Candidatura.setAprovacao(rs.getBoolean("aprovacao"));
+
+                lstCandidatura.add(Candidatura);
             }
-            return lstVaga;
+            return lstCandidatura;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar result set. Ex=" + ex.getMessage());
+            };
+            try {
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
+            };
+            try {
+                con.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
+            };
+        }
+
+    }
+    
+    public List<Candidatura> getListaByVaga(int id) throws SQLException {
+        com.mysql.jdbc.Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
+            stmt = con.prepareStatement(stmtSelectByIdVaga, Statement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            List<Candidatura> lstCandidatura = new ArrayList();
+
+            while (rs.next()) {
+                // criando o objeto Grupo
+                Candidatura Candidatura = new Candidatura();
+                CandidatoDAO CandidatoDAO = new CandidatoDAO();
+                VagaDAO VagaDAO = new VagaDAO();
+
+                Candidatura.setId(rs.getInt("id"));
+                Candidatura.setDate(rs.getDate("data"));
+                try {
+                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id")));
+                    Candidatura.setIdVaga(rs.getInt("Vaga_id"));
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(CandidaturaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Candidatura.setAprovacao(rs.getBoolean("aprovacao"));
+
+                lstCandidatura.add(Candidatura);
+            }
+            return lstCandidatura;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -215,8 +206,8 @@ public class VagaDAO {
 
     }
 
-    public Vaga getById(int id) throws ClassNotFoundException {
-        Vaga Vaga = new Vaga();
+    public Candidatura getById(int id) throws ClassNotFoundException {
+        Candidatura Candidatura = new Candidatura();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -226,22 +217,20 @@ public class VagaDAO {
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                Vaga.setId(rs.getInt("id"));
-                Vaga.setNome(rs.getString("nome"));
-                Vaga.setDescricao(rs.getString("descricao"));
-                Vaga.setProva(rs.getBoolean("prova"));
-                VagaCategoriaDAO vcDAO = new VagaCategoriaDAO();
-                EmpresaDAO eDAO = new EmpresaDAO();
+                CandidatoDAO CandidatoDAO = new CandidatoDAO();
+                VagaDAO VagaDAO = new VagaDAO();
+
+                Candidatura.setId(rs.getInt("id"));
+                Candidatura.setDate(rs.getDate("data"));
                 try {
-                    Vaga.setVagaCategoria(vcDAO.getById(rs.getInt("VagaCategoria_id")));
-                    Vaga.setEmpresa(eDAO.getById(rs.getInt("Empresa_id")));
+                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id")));
+                    Candidatura.setIdVaga(rs.getInt("Vaga_id"));
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(VagaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CandidaturaDAO.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                CandidaturaDAO cDAO = new CandidaturaDAO();
-                Vaga.setLstcandidatura(cDAO.getListaByVaga(rs.getInt("id")));
+                Candidatura.setAprovacao(rs.getBoolean("aprovacao"));
             }
-            return Vaga;
+            return Candidatura;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -257,7 +246,7 @@ public class VagaDAO {
             };
         }
     }
-
+    
     public void delete(int id) {
         com.mysql.jdbc.Connection con = null;
         PreparedStatement stmt = null;
@@ -283,5 +272,30 @@ public class VagaDAO {
             };
         }
     }
+    
+    public void aprovar(boolean aprovar) {
+        com.mysql.jdbc.Connection con = null;
+        PreparedStatement stmt = null;
+        try {
 
+            con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
+            stmt = con.prepareStatement(stmtAprovar);
+            stmt.setBoolean(1, aprovar);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
+            };
+            try {
+                con.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
+            };
+        }
+    }
 }

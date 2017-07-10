@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.util.List;
+
 /**
  *
  * @author pcstr
@@ -16,7 +18,16 @@ public class Vaga {
     private boolean prova;
     private VagaCategoria VagaCategoria;
     private Empresa Empresa;
+    private List<Candidatura> lstcandidatura;
     private Prova Prova;
+
+    public List<Candidatura> getLstcandidatura() {
+        return lstcandidatura;
+    }
+
+    public void setLstcandidatura(List<Candidatura> lstcandidatura) {
+        this.lstcandidatura = lstcandidatura;
+    }
 
     public int getId() {
         return id;

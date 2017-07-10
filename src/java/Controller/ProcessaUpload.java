@@ -56,7 +56,7 @@ public class ProcessaUpload extends HttpServlet {
         
         String appPath = request.getServletContext().getRealPath("").replace("\\build\\", "\\");
         // constructs path of the directory to save uploaded file
-        String savePath = appPath + File.separator + SAVE_DIR + "\\" + id;
+        String savePath = appPath + File.separator + SAVE_DIR;
          
         // creates the save directory if it does not exists
         File fileSaveDir = new File(savePath);
@@ -64,15 +64,23 @@ public class ProcessaUpload extends HttpServlet {
             fileSaveDir.mkdir();
         }
         Collection<Part> teste = request.getParts();
+        String fileName = "";
         for (Part part : request.getParts()) {
-            String fileName = extractFileName(part);
+            fileName = extractFileName(part);
             // refines the fileName in case it is an absolute path
             fileName = new File(fileName).getName();
+            fileName = id + fileName;
             part.write(savePath + File.separator + fileName);
         }
         
-
-        
+        CandidatoDAO CandidatoDAO = new CandidatoDAO();
+        try {
+            Candidato candidato = CandidatoDAO.getById(Integer.parseInt(id));
+            candidato.setCurriculo(fileName);
+            CandidatoDAO.update(candidato);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProcessaUpload.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
     

@@ -5,6 +5,8 @@
  */
 package Controller;
 
+import Model.CandidaturaDAO;
+import Model.Candidatura;
 import Model.Empresa;
 import Model.Vaga;
 import Model.VagaCategoria;
@@ -140,6 +142,42 @@ public class ProcessaCadVaga extends HttpServlet {
 
                 VagaDAO.delete(id);
             }
+            
+            // ------- CANDIDATURAS ---------
+            
+            if ("GETLISTCANDIDATURA".equals(tipoServlet)) {
+                int idVaga = Integer.parseInt(request.getParameter("idVaga"));
+                try {
+                    Vaga = VagaDAO.getById(idVaga);
+                    String data = gson.toJson(Vaga.getLstcandidatura());
+
+                    jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
+                    out.println(jsonRetorno);
+
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if ("SETAPROVACANDIDATURA".equals(tipoServlet)) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                String aprovar = request.getParameter("aprovar");
+                
+                CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
+                Candidatura Candidatura = new Candidatura();
+                try {
+                    Candidatura = CandidaturaDAO.getById(id);
+                    if("true".equals(aprovar)){
+                        Candidatura.setAprovacao(true);
+                    }else{
+                        Candidatura.setAprovacao(false);
+                    }
+                    CandidaturaDAO.update(Candidatura);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
         }else{
             out.println("ERRO_DESLOGAR");
         }

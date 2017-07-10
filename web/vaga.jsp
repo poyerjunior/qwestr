@@ -10,6 +10,7 @@
                 <th>Descrição</th>
                 <th>Categoria</th>
                 <th>Prova</th>
+                <th class="acoes">Candidaturas</th>
                 <th class="acoes">Ações</th>
             </tr>
         </thead>
@@ -64,6 +65,30 @@
         <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Fechar</a>
     </div>
 </div>
+<div id="modal-candidaturas" class="modal modal-fixed-footer"> 
+    <div class="modal-content">
+        <h4>Candidaturas</h4>
+        <div class="row margin-0">
+            <input id="command-candidatura" type="hidden" type="text" name="id"/>
+            <table id="lvListaCandidatura" class="table table-striped table-bordered dt-responsive nowrap striped" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Candidato</th>
+                        <th>CPF</th>
+                        <th>Data</th>
+                        <th>Currículo</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="left" id="dvMsg">
+        </div>
+        <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Fechar</a>
+    </div>
+</div>
 <script type="text/javascript">
     var form = "formCadastro";
     var servlet = "ProcessaCadVaga"
@@ -87,6 +112,15 @@
         });
         $("#lnkNovo").on('click', function () {
             novo(form, 0);
+        });
+        $('body').on('click', 'a.lnkVisualizar', function () {
+            getListCandidatura($(this).data("id"));
+        });
+        $('body').on('click', 'a.lnkAprovar', function () {
+            aprovarCandidatura($(this).data("id"), true);
+        });
+        $('body').on('click', 'a.lnkDesaprovar', function () {
+            aprovarCandidatura($(this).data("id"), false);
         });
     }
 
@@ -130,6 +164,7 @@
                 {"data": "descricao"},
                 {"data": "VagaCategoria.nome"},
                 {"data": "prova"},
+                {"data": "candidaturas"},
                 {"data": "Ações"}
             ],
             "initComplete": function (settings, json) {
@@ -148,6 +183,13 @@
                 },
                 {
                     "targets": 4,
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        return "<a class=\"lnkVisualizar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Visualizar</a>";
+                    }
+                },
+                {
+                    "targets": 5,
                     "data": null,
                     "render": function (data, type, full, meta) {
                         return "<div class=\"acoes\"><a class=\"lnkEdit\" href=\"#modal-cadastro\" data-id=\"" + full.id + "\"><i class=\"material-icons\">mode_edit</i></a>" +
@@ -216,12 +258,65 @@
         });
     }
 
-    function teste() {
-        var tipoServelet = "GETLIST";
+    // ---------------- CANDIDATURAS ---------------------//
+
+    function getListCandidatura(idVaga) {
+        var tipoServlet = "GETLISTCANDIDATURA";
+        $("#command-candidatura").val(idVaga);
+        $('#lvListaCandidatura').DataTable({
+            destroy: true,
+            stateSave: true,
+            "ajax": servlet + "?tipoServlet=" + tipoServlet + "&idVaga=" + idVaga,
+            "columns": [
+                {"data": "Candidato.nome"},
+                {"data": "Candidato.cpf"},
+                {"data": "date"},
+                {"data": "Candidato.curriculo"},
+                {"data": "Ações"}
+            ],
+            "initComplete": function (settings, json) {
+                $(".proximo").html("Próximo");
+            },
+            "columnDefs": [
+                {
+                    "targets": 3,
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        return "<a target=\"_blank\" href=\"uploadFiles/"+full.Candidato.curriculo+"\" data-id=\"" + full.id + "\">Visualizar</a>";
+                    }
+                },
+                {
+                    "targets": 4,
+                    "data": null,
+                    "render": function (data, type, full, meta) {
+                        if((!full.aprovacao))
+                            return "<a class=\"lnkAprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Aprovar</a>";
+                        else
+                            return "<a class=\"lnkDesaprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Desaprovar</a>";
+                    }
+                }
+            ]
+        });
+    }
+    
+    function aprovarCandidatura(id, aprovar){
+        var tipoServelet = "SETAPROVACANDIDATURA";
         $.ajax({
             type: "post",
             url: "ProcessaCadVaga", //this is my servlet
-            data: "tipoServlet=" + tipoServelet,
+            data: "tipoServlet=" + tipoServelet + "&id=" + id + "&aprovar=" + aprovar,
+            success: function (result) {
+                getListCandidatura($("#command-candidatura").val());
+            }
+        });
+    }
+
+    function teste() {
+        var tipoServelet = "GETLISTCANDIDATURA";
+        $.ajax({
+            type: "post",
+            url: "ProcessaCadVaga", //this is my servlet
+            data: "tipoServlet=" + tipoServelet + "&idVaga=" + 1,
             success: function (result) {
                 alert(result);
                 console.log(result);
