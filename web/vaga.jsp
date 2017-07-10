@@ -1,20 +1,22 @@
 <jsp:include page="header.jsp"/>
-<div class="container margin-bt-10 txt-right">
-    <a id="lnkNovo" data-id="0" class="waves-effect waves-light btn" href="#modal-cadastro"><i class="material-icons right">add</i>Novo</a>
-</div>
-<div class="container margin-bt-20">
-    <table id="lvLista" class="table table-striped table-bordered dt-responsive nowrap striped" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th>Categoria</th>
-                <th>Prova</th>
-                <th class="acoes">Candidaturas</th>
-                <th class="acoes">Ações</th>
-            </tr>
-        </thead>
-    </table>
+<div class="container z-depth-3 margin-bt-20 padding-20">
+    <div class="row margin-bt-10 txt-right margin-0">
+        <a id="lnkNovo" data-id="0" class="waves-effect waves-light btn" href="#modal-cadastro"><i class="material-icons right">add</i>Novo</a>
+    </div>
+    <div class="row margin-bt-20 margin-0">
+        <table id="lvLista" class="table table-striped table-bordered dt-responsive nowrap striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Categoria</th>
+                    <th>Prova</th>
+                    <th class="acoes">Candidaturas</th>
+                    <th class="acoes">Ações</th>
+                </tr>
+            </thead>
+        </table>
+    </div> 
 </div>
 <div id="modal-cadastro" class="modal modal-fixed-footer"> 
     <div class="modal-content">
@@ -282,24 +284,24 @@
                     "targets": 3,
                     "data": null,
                     "render": function (data, type, full, meta) {
-                        return "<a target=\"_blank\" href=\"uploadFiles/"+full.Candidato.curriculo+"\" data-id=\"" + full.id + "\">Visualizar</a>";
+                        return "<a target=\"_blank\" href=\"uploadFiles/" + full.Candidato.curriculo + "\" data-id=\"" + full.id + "\">Visualizar</a>";
                     }
                 },
                 {
                     "targets": 4,
                     "data": null,
                     "render": function (data, type, full, meta) {
-                        if((!full.aprovacao))
-                            return "<a class=\"lnkAprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Aprovar</a>";
+                        if ((!full.aprovacao))
+                            return "<div>Situação: <span style='color:#bf360c;'>Não aprovado</span></div> Ação: <a class=\"lnkAprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Aprovar</a>";
                         else
-                            return "<a class=\"lnkDesaprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Desaprovar</a>";
+                            return "<div>Situação: <span style='color:#64dd17 ;'>Aprovado</span></div> Ação: <a class=\"lnkDesaprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Desaprovar</a>";
                     }
                 }
             ]
         });
     }
-    
-    function aprovarCandidatura(id, aprovar){
+
+    function aprovarCandidatura(id, aprovar) {
         var tipoServelet = "SETAPROVACANDIDATURA";
         $.ajax({
             type: "post",

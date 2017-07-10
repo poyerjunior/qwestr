@@ -1,8 +1,8 @@
 
 <jsp:include page="header.jsp"/>
-<div class="container">
-    <div class="row">
-        <div class="row">
+<div class="container z-depth-3 margin-bt-20 padding-20">
+    <div class="row margin-0">
+        <div class="row margin-0">
             <div class="input-field col s12">
                 <input id="txtBuscar" type="text">
                 <label for="txtBusca">Procurar vagas</label>
@@ -12,15 +12,16 @@
             </div>
         </div>
     </div>
-</div>
-<div class="container">
-    <div class="section">
-        <div id="dvAguarde"></div>
-        <div class="row content-vagas">
+    <div class="row margin-0">
+        <div class="section">
+            <div id="dvAguarde"></div>
+            <div class="row content-vagas margin-0">
 
+            </div>
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     var dvMsg = "dvAguarde";
     var servlet = "ProcessaVagas"
@@ -63,7 +64,7 @@
                 data = JSON.parse(data);
                 console.log(data.data);
                 if (data.data.length == 0) {
-                        result = "Nenhuma vaga encontrada."    
+                    result = "Nenhuma vaga encontrada."
                 } else {
                     jQuery.each(data.data, function (i, json) {
                         result += "<div class=\"col s12 m4\">" +

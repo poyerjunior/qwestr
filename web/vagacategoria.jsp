@@ -1,16 +1,18 @@
 <jsp:include page="header.jsp"/>
-<div class="container margin-bt-10 txt-right">
-    <a id="lnkNovo" data-id="0" class="waves-effect waves-light btn" href="#modal-cadastro"><i class="material-icons right">add</i>Novo</a>
-</div>
-<div class="container margin-bt-20">
-    <table id="lvLista" class="table table-striped table-bordered dt-responsive nowrap striped" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th class="acoes">Ações</th>
-            </tr>
-        </thead>
-    </table>
+<div class="container z-depth-3 margin-bt-20 padding-20">
+    <div class="row margin-bt-10 txt-right margin-0">
+        <a id="lnkNovo" data-id="0" class="waves-effect waves-light btn" href="#modal-cadastro"><i class="material-icons right">add</i>Novo</a>
+    </div>
+    <div class="row margin-bt-20 margin-0">
+        <table id="lvLista" class="table table-striped table-bordered dt-responsive nowrap striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th class="acoes">Ações</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 <div id="modal-cadastro" class="modal"> 
     <div class="modal-content">
@@ -38,7 +40,7 @@
     var form = "formCadastro";
     var servlet = "ProcessaCadVagaCategoria"
     var dvMsg = "dvMsg";
-    
+
     $(document).ready(function () {
         carregaPagina();
     });
@@ -123,7 +125,7 @@
         getLoaderBar(dvMsg);
         $('.modal-content').addClass("none");
         $.ajax({
-            url: servlet + "?tipoServlet=" + tipoServlet+"&id="+id,
+            url: servlet + "?tipoServlet=" + tipoServlet + "&id=" + id,
             type: "get",
             data: null,
             success: function (data) {
@@ -139,12 +141,12 @@
     function deletar(id) {
         var tipoServlet = "DELETE";
         $.ajax({
-            url: servlet + "?tipoServlet=" + tipoServlet+"&id="+id,
+            url: servlet + "?tipoServlet=" + tipoServlet + "&id=" + id,
             type: "post",
             success: function (data) {
                 getList();
             },
-            error: function(data){
+            error: function (data) {
                 setToast("Não é possível deletar!");
             }
         });
