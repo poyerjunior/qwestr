@@ -1,3 +1,4 @@
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="header.jsp"/>
 <div class="container z-depth-3 margin-bt-20 padding-20">
     <div class="row margin-bt-10 txt-right margin-0">

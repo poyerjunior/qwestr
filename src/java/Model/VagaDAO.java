@@ -24,7 +24,7 @@ public class VagaDAO {
 
     private String stmtInsert = "insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values(?,?,?,?,?);";
     private String stmtUpdate = "update vaga set nome=?, descricao=?, prova=?, VagaCategoria_id=?, Empresa_id=? where id=?";
-    private String stmtSelect = "select * from vaga";
+    private String stmtSelect = "select * from vaga where Empresa_id = ?";
     private String stmtSelectTop = "SELECT vaga.*, VagaCategoria.nome as vagacategorianome FROM vaga\n" +
                                     "INNER JOIN VagaCategoria on VagaCategoria.id = vaga.VagaCategoria_id\n" +
                                     "WHERE vaga.nome like ? OR descricao like ? OR VagaCategoria.nome like ? Order By vaga.nome ASC LIMIT ?";
@@ -160,7 +160,7 @@ public class VagaDAO {
 
     }
 
-    public List<Vaga> getLista() throws SQLException {
+    public List<Vaga> getLista(int idEmpresa) throws SQLException {
         com.mysql.jdbc.Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -168,6 +168,7 @@ public class VagaDAO {
         try {
             con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
             stmt = con.prepareStatement(stmtSelect);
+            stmt.setInt(1, idEmpresa);
             rs = stmt.executeQuery();
             List<Vaga> lstVaga = new ArrayList();
 

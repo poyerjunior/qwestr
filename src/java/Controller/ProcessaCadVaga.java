@@ -67,7 +67,7 @@ public class ProcessaCadVaga extends HttpServlet {
             if ("GETLIST".equals(tipoServlet)) {
 
                 try {
-                    lstVaga = VagaDAO.getLista();
+                    lstVaga = VagaDAO.getLista(empresa.getId());
 
                     String data = gson.toJson(lstVaga);
 

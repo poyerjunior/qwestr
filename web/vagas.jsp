@@ -69,7 +69,7 @@
                     jQuery.each(data.data, function (i, json) {
                         result += "<div class=\"col s12 m4\">" +
                                 "<div class=\"card small\">" +
-                                "<a href=\"vagadetalhe.jsp?id=" + json.id + "\">" +
+                                "<a href=\"ProcessaVagaDetalhe?id=" + json.id + "\">" +
                                 "<div class=\"card-image waves-effect waves-block waves-light teal\" style=\"height: 60%;\">" +
                                 "</div>" +
                                 "</a>" +
