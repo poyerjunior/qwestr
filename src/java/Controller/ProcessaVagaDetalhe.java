@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -60,7 +61,16 @@ public class ProcessaVagaDetalhe extends HttpServlet {
 
             try {
                 Vaga = VagaDAO.getById(id);
-
+                int isCandidato = 0;
+                 for (Candidatura Candidatura : Vaga.getLstcandidatura()) {
+                     if((Candidatura.getCandidato() != null) && (Candidatura.getCandidato().getId() == Candidato.getId())){
+                         isCandidato = 1;
+                         request.setAttribute("Candidatura", Candidatura);
+                         break;
+                     }
+                 }
+                 
+                request.setAttribute("isCandidato", isCandidato);
                 request.setAttribute("vaga", Vaga);
                 request.setAttribute("vagacategoria", Vaga.getVagaCategoria());
                 RequestDispatcher rd = getServletContext().getRequestDispatcher("/vagadetalhe.jsp");
@@ -75,11 +85,19 @@ public class ProcessaVagaDetalhe extends HttpServlet {
             int idVaga = Integer.parseInt(request.getParameter("idVaga"));
             CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
             Candidatura Candidatura = new Candidatura();
-            
+            java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
             Candidatura.setAprovacao(false);
             Candidatura.setCandidato(Candidato);
-            Candidatura.setDate(Date.valueOf(LocalDate.MAX));
+            Candidatura.setDate(date);
             Candidatura.setIdVaga(idVaga);
+            CandidaturaDAO.insert(Candidatura);
+        }
+        
+        if ("DELETECANDIDATURA".equals(tipoServlet)) {
+            int idCandidatura = Integer.parseInt(request.getParameter("idCandidatura"));
+            CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
+            
+            CandidaturaDAO.delete(idCandidatura);
         }
 
     }

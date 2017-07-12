@@ -57,7 +57,7 @@ public class ProcessaLogin extends HttpServlet {
 
             if (candidato.getId() != 0) {
                 HttpSession session = request.getSession();
-                session.setAttribute("usuario", candidato);
+                session.setAttribute("candidato", candidato);
                 out.println("vagas.jsp");
             } else {
                 Empresa Empresa = new Empresa();

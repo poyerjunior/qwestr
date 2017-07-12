@@ -315,11 +315,11 @@
     }
 
     function teste() {
-        var tipoServelet = "GETLISTCANDIDATURA";
+        var tipoServlet = "GETLISTCANDIDATURA";
         $.ajax({
             type: "post",
             url: "ProcessaCadVaga", //this is my servlet
-            data: "tipoServlet=" + tipoServelet + "&idVaga=" + 1,
+            data: "tipoServlet=" + tipoServlet + "&idVaga=" + 1,
             success: function (result) {
                 alert(result);
                 console.log(result);
