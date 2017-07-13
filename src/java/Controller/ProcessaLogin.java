@@ -66,7 +66,7 @@ public class ProcessaLogin extends HttpServlet {
                     Empresa = EmpresaDAO.verificaLogin(email, senha);
                     HttpSession session = request.getSession();
                     session.setAttribute("empresa", Empresa);
-                    out.println("vagas.jsp");
+                    out.println("vaga.jsp");
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(ProcessaLogin.class.getName()).log(Level.SEVERE, null, ex);
                 }

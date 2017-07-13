@@ -2,7 +2,7 @@
     Document   : header
     Created on : 05/06/2017, 20:45:41
 --%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -114,14 +114,22 @@
 
     </script>
     <body>
+        <jsp:useBean id="empresa" scope="session" class="Model.Empresa" />
         <main style="padding-bottom: 64px;">
             <nav class="teal" role="navigation">
                 <div class="nav-wrapper container">
                     <a id="logo-container" href="#" class="brand-logo">Logo</a>
                     <ul class="right hide-on-med-and-down">
-                        <li><a href="vagas.jsp">Vagas</a></li>
-                        <li><a href="vagacategoria.jsp">Categoria de Vaga</a></li>
-                        <li><a href="vaga.jsp">Cadastro de Vagas</a></li>
+                        <c:choose>
+                            <c:when test="${empresa.id > 0}"> 
+                                <li><a href="vagacategoria.jsp">Categorias</a></li>
+                                <li><a href="vaga.jsp">Minhas vagas</a></li>
+                                </c:when>
+                                <c:otherwise>
+                                <li><a href="vagas.jsp">Vagas</a></li>
+                                </c:otherwise>
+                            </c:choose> 
+                        <li><a href="ProcessaLogout">Logout</a></li>
                     </ul>
 
                     <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -131,6 +139,7 @@
                 <li><a href="vagas.jsp">Vagas</a></li>
                 <li><a href="vagacategoria.jsp">Categoria de Vaga</a></li>
                 <li><a href="vaga.jsp">Cadastro de Vagas</a></li>
+                <li><a href="ProcessaLogout">Logout</a></li>
             </ul>
         </main>
         <div id="modal-deletar" class="modal modal-fixed-footer">

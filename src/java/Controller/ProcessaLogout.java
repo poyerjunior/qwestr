@@ -5,22 +5,9 @@
  */
 package Controller;
 
-import Model.Candidato;
-import Model.Empresa;
-import Model.Vaga;
-import Model.VagaCategoria;
-import Model.VagaCategoriaDAO;
-import Model.VagaDAO;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,14 +17,13 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author sergio.poyer
+ * @author Junior
  */
-@WebServlet(name = "ProcessaVagas", urlPatterns = {"/ProcessaVagas"})
-public class ProcessaVagas extends HttpServlet {
+@WebServlet(name = "ProcessaLogout", urlPatterns = {"/ProcessaLogout"})
+public class ProcessaLogout extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -47,40 +33,13 @@ public class ProcessaVagas extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-
-        HttpSession session = request.getSession();
-        Candidato Candidato = (Candidato) session.getAttribute("candidato");
-
-        if (Candidato != null) {
-            List<Vaga> lstVaga = new ArrayList();
-            VagaDAO VagaDAO = new VagaDAO();
-            Vaga Vaga = new Vaga();
-            VagaCategoriaDAO VagaCategoriaDAO = new VagaCategoriaDAO();
-            VagaCategoria VagaCategoria = new VagaCategoria();
-            Gson gson = new Gson();
-            JsonObject jsonRetorno = new JsonObject();
-
-            String tipoServlet = request.getParameter("tipoServlet");
-            if ("GETLIST".equals(tipoServlet)) {
-                int qtd = Integer.parseInt(request.getParameter("qtd"));
-                String p1 = request.getParameter("p1");
-                try {
-                    lstVaga = VagaDAO.getListaTop(p1, qtd);
-
-                    String data = gson.toJson(lstVaga);
-
-                    jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
-                    out.println(jsonRetorno);
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }else{
-            out.println("ERRO_DESLOGAR");
+        try (PrintWriter out = response.getWriter()) {
+            HttpSession session = request.getSession(false);
+            if (session!=null)
+                session.invalidate();
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
+            rd.forward(request, response);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

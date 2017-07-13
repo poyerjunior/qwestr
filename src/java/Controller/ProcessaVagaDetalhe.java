@@ -47,57 +47,61 @@ public class ProcessaVagaDetalhe extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        
+
         HttpSession session = request.getSession();
         Candidato Candidato = (Candidato) session.getAttribute("candidato");
-        
-        String tipoServlet = request.getParameter("tipoServlet");
-        
-        if ("GETBYID".equals(tipoServlet)) {
-            int id = Integer.parseInt(request.getParameter("id"));
 
-            VagaDAO VagaDAO = new VagaDAO();
-            Vaga Vaga = new Vaga();
+        if (Candidato != null) {
+            String tipoServlet = request.getParameter("tipoServlet");
 
-            try {
-                Vaga = VagaDAO.getById(id);
-                int isCandidato = 0;
-                 for (Candidatura Candidatura : Vaga.getLstcandidatura()) {
-                     if((Candidatura.getCandidato() != null) && (Candidatura.getCandidato().getId() == Candidato.getId())){
-                         isCandidato = 1;
-                         request.setAttribute("Candidatura", Candidatura);
-                         break;
-                     }
-                 }
-                 
-                request.setAttribute("isCandidato", isCandidato);
-                request.setAttribute("vaga", Vaga);
-                request.setAttribute("vagacategoria", Vaga.getVagaCategoria());
-                RequestDispatcher rd = getServletContext().getRequestDispatcher("/vagadetalhe.jsp");
-                rd.forward(request, response);
+            if ("GETBYID".equals(tipoServlet)) {
+                int id = Integer.parseInt(request.getParameter("id"));
 
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProcessaVagaDetalhe.class.getName()).log(Level.SEVERE, null, ex);
+                VagaDAO VagaDAO = new VagaDAO();
+                Vaga Vaga = new Vaga();
+
+                try {
+                    Vaga = VagaDAO.getById(id);
+                    int isCandidato = 0;
+                    for (Candidatura Candidatura : Vaga.getLstcandidatura()) {
+                        if ((Candidatura.getCandidato() != null) && (Candidatura.getCandidato().getId() == Candidato.getId())) {
+                            isCandidato = 1;
+                            request.setAttribute("Candidatura", Candidatura);
+                            break;
+                        }
+                    }
+
+                    request.setAttribute("isCandidato", isCandidato);
+                    request.setAttribute("vaga", Vaga);
+                    request.setAttribute("vagacategoria", Vaga.getVagaCategoria());
+                    RequestDispatcher rd = getServletContext().getRequestDispatcher("/vagadetalhe.jsp");
+                    rd.forward(request, response);
+
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProcessaVagaDetalhe.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        }
-        
-        if ("SETCANDIDATURA".equals(tipoServlet)) {
-            int idVaga = Integer.parseInt(request.getParameter("idVaga"));
-            CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
-            Candidatura Candidatura = new Candidatura();
-            java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-            Candidatura.setAprovacao(false);
-            Candidatura.setCandidato(Candidato);
-            Candidatura.setDate(date);
-            Candidatura.setIdVaga(idVaga);
-            CandidaturaDAO.insert(Candidatura);
-        }
-        
-        if ("DELETECANDIDATURA".equals(tipoServlet)) {
-            int idCandidatura = Integer.parseInt(request.getParameter("idCandidatura"));
-            CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
-            
-            CandidaturaDAO.delete(idCandidatura);
+
+            if ("SETCANDIDATURA".equals(tipoServlet)) {
+                int idVaga = Integer.parseInt(request.getParameter("idVaga"));
+                CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
+                Candidatura Candidatura = new Candidatura();
+                java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                Candidatura.setAprovacao(false);
+                Candidatura.setCandidato(Candidato);
+                Candidatura.setDate(date);
+                Candidatura.setIdVaga(idVaga);
+                CandidaturaDAO.insert(Candidatura);
+            }
+
+            if ("DELETECANDIDATURA".equals(tipoServlet)) {
+                int idCandidatura = Integer.parseInt(request.getParameter("idCandidatura"));
+                CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
+
+                CandidaturaDAO.delete(idCandidatura);
+            }
+        }else{
+            out.println("ERRO_DESLOGAR");
         }
 
     }
