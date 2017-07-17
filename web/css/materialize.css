@@ -2894,8 +2894,12 @@ table.bordered > tbody > tr {
   border-bottom: 1px solid #d0d0d0;
 }
 
+table.striped > tbody > tr:nth-child(even) {
+  background-color: #F9F9F9;
+}
+
 table.striped > tbody > tr:nth-child(odd) {
-  background-color: #f2f2f2;
+  background-color: #E8E8E8;
 }
 
 table.striped > tbody > tr > td {
@@ -2904,6 +2908,10 @@ table.striped > tbody > tr > td {
 
 table.striped > tbody > tr:hover {
   background-color: rgba(0, 150, 136, 0.5);
+}
+
+table.striped > tbody > th:nth-child(odd) {
+  background: rgba(15, 43, 78, 0.29);
 }
 
 table.highlight > tbody > tr {

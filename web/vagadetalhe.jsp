@@ -17,7 +17,7 @@
                 <c:choose>
                     <c:when test="${isCandidato > 0}"> 
                         <div class="input-field col s12">
-                            <a onclick="deleteCandidatar(${Candidatura.id});" class="waves-effect waves-light btn right"><i class="material-icons right">add</i>Remover candidatura</a>
+                            <a onclick="deleteCandidatar(${Candidatura.id});" class="waves-effect waves-light btn right"><i class="material-icons right">delete</i>Remover candidatura</a>
                         </div>
                     </c:when>
                     <c:otherwise>

@@ -625,10 +625,17 @@ footer.page-footer {
 }
 
 body{
-    background-color: #F9f9f9;
+    background-color: rgba(0, 150, 136, 0.11) !important;
 }
 
 .spn-categoria{
     font-size: 13px; 
 }
 
+.container.z-depth-3.margin-bt-20.padding-20{
+    background-color: #F9F9F9;
+}
+
+.lnkDelete{
+    color:#f4511e;
+}

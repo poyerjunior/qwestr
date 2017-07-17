@@ -32,7 +32,7 @@
 
                 $(".menu-empresa").addClass("active");
 
-                $('body').on('click', 'a.lnkRemover', function () {
+                $('body').on('click', 'a.lnkDelete', function () {
                     setRemover($(this).data("id"));
                 });
             }
@@ -71,7 +71,7 @@
                                 var obj = full.lstcandidatura.filter(function (el) {
                                     return (el.Vaga.id == full.id);
                                 });
-                                return "<a href=\"#\" class=\"lnkRemover\" data-id=\"" + obj[0].id + "\">Remover</a>";
+                                return "<div class=\"acoes\"><a href=\"#\" class=\"lnkDelete\" data-id=\"" + obj[0].id + "\"><i class=\"material-icons\">delete</i></a></div>";
                             }
                         }
                     ]
