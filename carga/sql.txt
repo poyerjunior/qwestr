@@ -1,0 +1,5 @@
+insert into CandidaturaStatus(nome) values('Aprovado');
+
+insert into CandidaturaStatus(nome) values('Reprovado');
+
+insert into CandidaturaStatus(nome) values('Aguardando avaliação');
