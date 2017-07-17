@@ -126,6 +126,7 @@
                                 <li><a href="vaga.jsp">Minhas vagas</a></li>
                                 </c:when>
                                 <c:otherwise>
+                                <li><a href="candidatura.jsp">Minhas candidaturas</a></li>
                                 <li><a href="vagas.jsp">Vagas</a></li>
                                 </c:otherwise>
                             </c:choose> 

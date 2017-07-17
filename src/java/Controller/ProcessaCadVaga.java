@@ -7,6 +7,7 @@ package Controller;
 
 import Model.CandidaturaDAO;
 import Model.Candidatura;
+import Model.CandidaturaStatusDAO;
 import Model.Empresa;
 import Model.Vaga;
 import Model.VagaCategoria;
@@ -112,7 +113,7 @@ public class ProcessaCadVaga extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("id"));
 
                 try {
-                    Vaga = VagaDAO.getById(id);
+                    Vaga = VagaDAO.getById(id, true);
                     String data = gson.toJson(Vaga);
                     out.println(data);
 
@@ -148,7 +149,7 @@ public class ProcessaCadVaga extends HttpServlet {
             if ("GETLISTCANDIDATURA".equals(tipoServlet)) {
                 int idVaga = Integer.parseInt(request.getParameter("idVaga"));
                 try {
-                    Vaga = VagaDAO.getById(idVaga);
+                    Vaga = VagaDAO.getById(idVaga, true);
                     String data = gson.toJson(Vaga.getLstcandidatura());
 
                     jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
@@ -165,12 +166,13 @@ public class ProcessaCadVaga extends HttpServlet {
                 
                 CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
                 Candidatura Candidatura = new Candidatura();
+                CandidaturaStatusDAO CandidaturaStatusDAO = new CandidaturaStatusDAO();
                 try {
                     Candidatura = CandidaturaDAO.getById(id);
                     if("true".equals(aprovar)){
-                        Candidatura.setAprovacao(true);
+                        Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(1));
                     }else{
-                        Candidatura.setAprovacao(false);
+                        Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(2));
                     }
                     CandidaturaDAO.update(Candidatura);
                 } catch (ClassNotFoundException ex) {

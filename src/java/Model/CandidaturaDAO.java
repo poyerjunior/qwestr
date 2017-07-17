@@ -22,13 +22,13 @@ import java.util.logging.Logger;
  */
 public class CandidaturaDAO {
 
-    private String stmtInsert = "insert into candidatura(data, Candidato_id, Vaga_id, aprovacao) values(?,?,?,?);";
-    private String stmtUpdate = "update candidatura set data=?, Candidato_id=?, Vaga_id=?, aprovacao=? where id=?";
+    private String stmtInsert = "insert into candidatura(data, Candidato_id, Vaga_id, CandidaturaStatus_id) values(?,?,?,?);";
+    private String stmtUpdate = "update candidatura set data=?, Candidato_id=?, Vaga_id=?, CandidaturaStatus_id=? where id=?";
     private String stmtSelect = "select * from candidatura";
     private String stmtSelectByIdVaga = "select * from candidatura where Vaga_id = ?";
+    private String stmtSelectByIdCandidato = "select * from candidatura where Candidato_id = ?";
     private String stmtSelectById = "select * from candidatura where id =?";
     private String stmtDelete = "delete from candidatura where id = ?";
-    private String stmtAprovar = "update candidatura set aprovacao=? where id=?";
 
     public void insert(Candidatura Candidatura) {
         Connection con = null;
@@ -40,8 +40,8 @@ public class CandidaturaDAO {
 
             stmt.setDate(1, Candidatura.getDate());
             stmt.setInt(2, Candidatura.getCandidato().getId());
-            stmt.setInt(3, Candidatura.getIdVaga());
-            stmt.setBoolean(4, Candidatura.isAprovacao());
+            stmt.setInt(3, Candidatura.getVaga().getId());
+            stmt.setInt(4, Candidatura.getCandidaturaStatus().getId());
 
             stmt.execute();
             //Seta o id 
@@ -78,8 +78,8 @@ public class CandidaturaDAO {
 
             stmt.setDate(1, Candidatura.getDate());
             stmt.setInt(2, Candidatura.getCandidato().getId());
-            stmt.setInt(3, Candidatura.getIdVaga());
-            stmt.setBoolean(4, Candidatura.isAprovacao());
+            stmt.setInt(3, Candidatura.getVaga().getId());
+            stmt.setInt(4, Candidatura.getCandidaturaStatus().getId());
             stmt.setInt(5, Candidatura.getId());
             stmt.executeUpdate();
 
@@ -115,12 +115,70 @@ public class CandidaturaDAO {
                 Candidatura Candidatura = new Candidatura();
                 CandidatoDAO CandidatoDAO = new CandidatoDAO();
                 VagaDAO VagaDAO = new VagaDAO();
+                CandidaturaStatusDAO CandidaturaStatusDAO = new CandidaturaStatusDAO();
 
                 Candidatura.setId(rs.getInt("id"));
                 Candidatura.setDate(rs.getDate("data"));
                 try {
-                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id")));
-                    Candidatura.setIdVaga(rs.getInt("Vaga_id"));
+                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id"), false));
+                    Candidatura.setVaga(VagaDAO.getById(rs.getInt("Vaga_id"), false));
+                    Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(rs.getInt("CandidaturaStatus_id")));
+
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(CandidaturaDAO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                lstCandidatura.add(Candidatura);
+            }
+            return lstCandidatura;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar result set. Ex=" + ex.getMessage());
+            };
+            try {
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
+            };
+            try {
+                con.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
+            };
+        }
+
+    }
+
+    public List<Candidatura> getListaByCandidato(int id) throws SQLException {
+        com.mysql.jdbc.Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
+            stmt = con.prepareStatement(stmtSelectByIdCandidato, Statement.RETURN_GENERATED_KEYS);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            List<Candidatura> lstCandidatura = new ArrayList();
+
+            while (rs.next()) {
+                // criando o objeto Grupo
+                Candidatura Candidatura = new Candidatura();
+                VagaDAO VagaDAO = new VagaDAO();
+                CandidatoDAO CandidatoDAO = new CandidatoDAO();
+                CandidaturaStatusDAO CandidaturaStatusDAO = new CandidaturaStatusDAO();
+
+                Candidatura.setId(rs.getInt("id"));
+                Candidatura.setDate(rs.getDate("data"));
+                try {
+                    Candidatura.setVaga(VagaDAO.getById(rs.getInt("Vaga_id"), false));
+                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id"), false));
+                    Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(rs.getInt("CandidaturaStatus_id")));
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(CandidaturaDAO.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -151,7 +209,7 @@ public class CandidaturaDAO {
         }
 
     }
-    
+
     public List<Candidatura> getListaByVaga(int id) throws SQLException {
         com.mysql.jdbc.Connection con = null;
         PreparedStatement stmt = null;
@@ -169,12 +227,14 @@ public class CandidaturaDAO {
                 Candidatura Candidatura = new Candidatura();
                 CandidatoDAO CandidatoDAO = new CandidatoDAO();
                 VagaDAO VagaDAO = new VagaDAO();
+                CandidaturaStatusDAO CandidaturaStatusDAO = new CandidaturaStatusDAO();
 
                 Candidatura.setId(rs.getInt("id"));
                 Candidatura.setDate(rs.getDate("data"));
                 try {
-                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id")));
-                    Candidatura.setIdVaga(rs.getInt("Vaga_id"));
+                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id"), false));
+                    Candidatura.setVaga(VagaDAO.getById(rs.getInt("Vaga_id"), false));
+                    Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(rs.getInt("CandidaturaStatus_id")));
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(CandidaturaDAO.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -219,12 +279,14 @@ public class CandidaturaDAO {
             while (rs.next()) {
                 CandidatoDAO CandidatoDAO = new CandidatoDAO();
                 VagaDAO VagaDAO = new VagaDAO();
+                CandidaturaStatusDAO CandidaturaStatusDAO = new CandidaturaStatusDAO();
 
                 Candidatura.setId(rs.getInt("id"));
                 Candidatura.setDate(rs.getDate("data"));
                 try {
-                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id")));
-                    Candidatura.setIdVaga(rs.getInt("Vaga_id"));
+                    Candidatura.setCandidato(CandidatoDAO.getById(rs.getInt("Candidato_id"), false));
+                    Candidatura.setVaga(VagaDAO.getById(rs.getInt("Vaga_id"), false));
+                    Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(rs.getInt("CandidaturaStatus_id")));
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(CandidaturaDAO.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -246,7 +308,7 @@ public class CandidaturaDAO {
             };
         }
     }
-    
+
     public void delete(int id) {
         com.mysql.jdbc.Connection con = null;
         PreparedStatement stmt = null;
@@ -255,32 +317,6 @@ public class CandidaturaDAO {
             con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
             stmt = con.prepareStatement(stmtDelete);
             stmt.setInt(1, id);
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                stmt.close();
-            } catch (Exception ex) {
-                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
-            };
-            try {
-                con.close();
-            } catch (Exception ex) {
-                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
-            };
-        }
-    }
-    
-    public void aprovar(boolean aprovar) {
-        com.mysql.jdbc.Connection con = null;
-        PreparedStatement stmt = null;
-        try {
-
-            con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
-            stmt = con.prepareStatement(stmtAprovar);
-            stmt.setBoolean(1, aprovar);
             stmt.executeUpdate();
 
         } catch (SQLException e) {

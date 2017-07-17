@@ -261,7 +261,7 @@
                         data: $("#formLogin").serialize(),
                         success: function (data)
                         {
-                            if (data == "ERRO") {
+                            if ($.trim(data) == "ERRO") {
                                 setMsg('Usuário ou senha inválidos!');
                             } else {
                                 window.location = data;

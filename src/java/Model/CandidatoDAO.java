@@ -124,7 +124,8 @@ public class CandidatoDAO {
                 Candidato.setEmail(rs.getString("email"));
                 Candidato.setSenha(rs.getString("senha"));
                 Candidato.setNota(rs.getDouble("nota"));
-
+                CandidaturaDAO cDAO = new CandidaturaDAO();
+                Candidato.setLstcandidatura(cDAO.getListaByCandidato(rs.getInt("id")));
                 lstCandidato.add(Candidato);
             }
             return lstCandidato;
@@ -151,7 +152,7 @@ public class CandidatoDAO {
 
     }
 
-    public Candidato getById(int id) throws ClassNotFoundException {
+    public Candidato getById(int id, boolean trazercandidatura) throws ClassNotFoundException {
         Candidato Candidato = new Candidato();
         Connection con = null;
         PreparedStatement stmt = null;
@@ -169,6 +170,10 @@ public class CandidatoDAO {
                 Candidato.setEmail(rs.getString("email"));
                 Candidato.setSenha(rs.getString("senha"));
                 Candidato.setNota(rs.getDouble("nota"));
+                if(trazercandidatura){
+                    CandidaturaDAO cDAO = new CandidaturaDAO();
+                    Candidato.setLstcandidatura(cDAO.getListaByCandidato(rs.getInt("id")));
+                }
             }
             return Candidato;
         } catch (SQLException e) {

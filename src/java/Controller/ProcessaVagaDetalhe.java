@@ -8,6 +8,7 @@ package Controller;
 import Model.Candidato;
 import Model.Candidatura;
 import Model.CandidaturaDAO;
+import Model.CandidaturaStatusDAO;
 import Model.Empresa;
 import Model.Vaga;
 import Model.VagaDAO;
@@ -61,7 +62,7 @@ public class ProcessaVagaDetalhe extends HttpServlet {
                 Vaga Vaga = new Vaga();
 
                 try {
-                    Vaga = VagaDAO.getById(id);
+                    Vaga = VagaDAO.getById(id, true);
                     int isCandidato = 0;
                     for (Candidatura Candidatura : Vaga.getLstcandidatura()) {
                         if ((Candidatura.getCandidato() != null) && (Candidatura.getCandidato().getId() == Candidato.getId())) {
@@ -85,12 +86,19 @@ public class ProcessaVagaDetalhe extends HttpServlet {
             if ("SETCANDIDATURA".equals(tipoServlet)) {
                 int idVaga = Integer.parseInt(request.getParameter("idVaga"));
                 CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
+                CandidaturaStatusDAO CandidaturaStatusDAO = new CandidaturaStatusDAO();
+                VagaDAO VagaDAO = new VagaDAO();
                 Candidatura Candidatura = new Candidatura();
                 java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-                Candidatura.setAprovacao(false);
                 Candidatura.setCandidato(Candidato);
                 Candidatura.setDate(date);
-                Candidatura.setIdVaga(idVaga);
+                try {
+                    Candidatura.setVaga(VagaDAO.getById(idVaga, true));
+                    Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(3));
+
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProcessaVagaDetalhe.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 CandidaturaDAO.insert(Candidatura);
             }
 
@@ -100,7 +108,7 @@ public class ProcessaVagaDetalhe extends HttpServlet {
 
                 CandidaturaDAO.delete(idCandidatura);
             }
-        }else{
+        } else {
             out.println("ERRO_DESLOGAR");
         }
 

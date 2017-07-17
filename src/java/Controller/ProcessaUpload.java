@@ -75,7 +75,7 @@ public class ProcessaUpload extends HttpServlet {
         
         CandidatoDAO CandidatoDAO = new CandidatoDAO();
         try {
-            Candidato candidato = CandidatoDAO.getById(Integer.parseInt(id));
+            Candidato candidato = CandidatoDAO.getById(Integer.parseInt(id), true);
             candidato.setCurriculo(fileName);
             CandidatoDAO.update(candidato);
         } catch (ClassNotFoundException ex) {

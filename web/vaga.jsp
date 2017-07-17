@@ -295,10 +295,12 @@
                             "targets": 4,
                             "data": null,
                             "render": function (data, type, full, meta) {
-                                if ((!full.aprovacao))
-                                    return "<div>Situação: <span style='color:#bf360c;'>Não aprovado</span></div> Ação: <a class=\"lnkAprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Aprovar</a>";
+                                if ((full.CandidaturaStatus.id == 1))
+                                    return "<div>Situação: <span style='color:#64dd17 ;'>"+full.CandidaturaStatus.nome+"</span></div> Ação: <a class=\"lnkDesaprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Desaprovar</a>";
+                                else if ((full.CandidaturaStatus.id == 2))
+                                    return "<div>Situação: <span style='color:#bf360c;'>"+full.CandidaturaStatus.nome+"</span></div> Ação: <a class=\"lnkAprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Aprovar</a>";
                                 else
-                                    return "<div>Situação: <span style='color:#64dd17 ;'>Aprovado</span></div> Ação: <a class=\"lnkDesaprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Desaprovar</a>";
+                                    return "<div>Situação: <span style='color:#bf360c;'>"+full.CandidaturaStatus.nome+"</span></div> Ação: <a class=\"lnkAprovar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Aprovar</a>";
                             }
                         }
                     ]

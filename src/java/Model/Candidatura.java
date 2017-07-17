@@ -15,19 +15,37 @@ public class Candidatura {
     private int id;
     private Date date;
     private Candidato Candidato;
-    private int idVaga;
+    private Vaga Vaga;
+    private CandidaturaStatus CandidaturaStatus;
 
-    public int getIdVaga() {
-        return idVaga;
+    public CandidaturaStatus getCandidaturaStatus() {
+        return CandidaturaStatus;
     }
 
-    public void setIdVaga(int idVaga) {
-        this.idVaga = idVaga;
+    public void setCandidaturaStatus(CandidaturaStatus CandidaturaStatus) {
+        this.CandidaturaStatus = CandidaturaStatus;
     }
-    private boolean aprovacao;
+
+    public Boolean getAprovacao() {
+        return aprovacao;
+    }
+
+    public void setAprovacao(Boolean aprovacao) {
+        this.aprovacao = aprovacao;
+    }
+    
+    private Boolean aprovacao;
 
     public int getId() {
         return id;
+    }
+
+    public Vaga getVaga() {
+        return Vaga;
+    }
+
+    public void setVaga(Vaga Vaga) {
+        this.Vaga = Vaga;
     }
 
     public void setId(int id) {

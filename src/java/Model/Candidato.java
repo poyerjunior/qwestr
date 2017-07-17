@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.util.List;
+
 /**
  *
  * @author pcstr
@@ -17,7 +19,16 @@ public class Candidato {
     private double nota;
     private String email;
     private String senha;
+    private List<Candidatura> lstcandidatura;
 
+    public List<Candidatura> getLstcandidatura() {
+        return lstcandidatura;
+    }
+
+    public void setLstcandidatura(List<Candidatura> lstcandidatura) {
+        this.lstcandidatura = lstcandidatura;
+    }
+    
     public int getId() {
         return id;
     }

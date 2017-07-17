@@ -6,14 +6,19 @@
 package Controller;
 
 import Model.Candidato;
-import Model.CandidatoDAO;
-import Model.Empresa;
-import Model.EmpresaDAO;
+import Model.CandidaturaDAO;
+import Model.Vaga;
+import Model.VagaDAO;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,10 +28,10 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author pcstr
+ * @author sergio.poyer
  */
-@WebServlet(name = "ProcessaLogin", urlPatterns = {"/ProcessaLogin"})
-public class ProcessaLogin extends HttpServlet {
+@WebServlet(name = "ProcessaCandidatura", urlPatterns = {"/ProcessaCandidatura"})
+public class ProcessaCandidatura extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,38 +47,33 @@ public class ProcessaLogin extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        String email = request.getParameter("email");
-        String senha = request.getParameter("senha");
+        HttpSession session = request.getSession();
+        Candidato Candidato = (Candidato) session.getAttribute("candidato");
+        JsonObject jsonRetorno = new JsonObject();
+        Gson gson = new Gson();
 
-        Candidato candidato = new Candidato();
-        CandidatoDAO candidatoDAO = new CandidatoDAO();
+        if (Candidato != null) {
+            String tipoServlet = request.getParameter("tipoServlet");
+            VagaDAO VagaDAO = new VagaDAO();
+            List<Vaga> lstVaga = new ArrayList();
+            if ("GETLIST".equals(tipoServlet)) {
+                String data;
+                try {
+                    lstVaga = VagaDAO.getListaByCandidato(Candidato.getId());
+                    data = gson.toJson(lstVaga);
+                    jsonRetorno.add("data", new JsonParser().parse(data).getAsJsonArray());
+                    out.println(jsonRetorno);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProcessaCandidatura.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
-        if ((!"".equals(email)) && (!"".equals(senha))) {
-            try {
-                candidato = candidatoDAO.verificaLogin(email, senha);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ProcessaLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            if (candidato.getId() != 0) {
-                HttpSession session = request.getSession();
-                session.setAttribute("candidato", candidato);
-                out.println("vagas.jsp");
-            } else {
-                Empresa Empresa = new Empresa();
-                EmpresaDAO EmpresaDAO = new EmpresaDAO();
-                try {
-                    Empresa = EmpresaDAO.verificaLogin(email, senha);
-                    if(Empresa.getId() != 0){
-                        HttpSession session = request.getSession();
-                        session.setAttribute("empresa", Empresa);
-                        out.println("vaga.jsp");
-                    }else{
-                        out.println("ERRO");
-                    }
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(ProcessaLogin.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            if ("SETREMOVET".equals(tipoServlet)) {
+                int idCandidatura = Integer.parseInt(request.getParameter("idCandidatura"));
+                CandidaturaDAO CandidaturaDAO = new CandidaturaDAO();
+
+                CandidaturaDAO.delete(idCandidatura);
             }
         }
     }
