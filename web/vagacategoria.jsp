@@ -54,7 +54,7 @@
 
                 getList();
 
-                $(".menu-empresa").addClass("active");
+                $(".menu-categorias").addClass("active");
 
                 $('body').on('click', 'a.lnkEdit', function () {
                     getDetails($(this).data("id"));

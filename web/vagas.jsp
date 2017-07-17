@@ -34,6 +34,8 @@
 
             function carregaPagina() {
 
+                $(".menu-vagas").addClass("active");
+
                 $(window).scroll(function () {
                     if ($(window).scrollTop() == $(document).height() - $(window).height()) {
                         qtd += 6;

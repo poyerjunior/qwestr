@@ -122,12 +122,12 @@
                     <ul class="right hide-on-med-and-down">
                         <c:choose>
                             <c:when test="${empresa.id > 0}"> 
-                                <li><a href="vagacategoria.jsp">Categorias</a></li>
-                                <li><a href="vaga.jsp">Minhas vagas</a></li>
+                                <li class="menu-categorias"><a href="vagacategoria.jsp">Categorias</a></li>
+                                <li class="menu-minhas-vagas"><a href="vaga.jsp">Minhas vagas</a></li>
                                 </c:when>
                                 <c:otherwise>
-                                <li><a href="candidatura.jsp">Minhas candidaturas</a></li>
-                                <li><a href="vagas.jsp">Vagas</a></li>
+                                <li class="menu-minhas-candidaturas"><a href="candidatura.jsp">Minhas candidaturas</a></li>
+                                <li class="menu-vagas"><a href="vagas.jsp">Vagas</a></li>
                                 </c:otherwise>
                             </c:choose> 
                         <li><a href="ProcessaLogout">Logout</a></li>

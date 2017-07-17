@@ -30,7 +30,7 @@
             function carregaPagina() {
                 getList();
 
-                $(".menu-empresa").addClass("active");
+                $(".menu-minhas-candidaturas").addClass("active");
 
                 $('body').on('click', 'a.lnkDelete', function () {
                     setRemover($(this).data("id"));

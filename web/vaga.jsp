@@ -106,7 +106,7 @@
                 var modalID = "modal-cadastro";
                 getComboVagaCategoria();
                 getList();
-                $(".menu-empresa").addClass("active");
+                $(".menu-minhas-vagas").addClass("active");
                 $('body').on('click', 'a.lnkEdit', function () {
                     getDetails($(this).data("id"));
                 });
