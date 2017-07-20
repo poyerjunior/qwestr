@@ -111,6 +111,61 @@
             }
         }
 
+        function getDadosEmpresa() {
+            var servlet = "ProcessaDados"
+            var tipoServlet = "GETBYIDEMPRESA";
+            var form = "formDadosEmpresa";
+            var dvMsg = "dvMsgDadosEmpresa";
+            $('#' + form)[0].reset();
+            getLoaderBar(dvMsg);
+            $('.modal-content').addClass("none");
+            $.ajax({
+                url: servlet + "?tipoServlet=" + tipoServlet,
+                type: "get",
+                data: null,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    JsonToForm(form, data);
+                    removeLoader();
+                    $('.modal-content').removeClass("none");
+                }
+            });
+        }
+
+        function salvarDadosEmpresa() {
+            var tipoServlet = "UPDATEEMPRESA";
+            var servlet = "ProcessaDados"
+            var form = "formDadosEmpresa";
+            var dvMsg = "dvMsgDadosEmpresa";
+
+            if (!verfSenhaEmpresa()) {
+                setToast("Senhas dinstintas!");
+                return false;
+            }
+            if (validaForm(form)) {
+                getLoaderBar(dvMsg);
+                $.ajax({
+                    url: servlet + "?tipoServlet=" + tipoServlet,
+                    type: "post",
+                    data: $("#" + form).serialize(),
+                    success: function (data) {
+                        setToast("Dados salvos com sucesso!");
+                        $('#modal-dados-empresa').modal('close');
+                        removeLoader();
+                    }
+                });
+            }
+        }
+
+        function verfSenhaEmpresa() {
+            if (($("#txtSenhaEmpresa").val() != $("#txtConfirmaSenhaEmpresa").val())){
+                return false; 
+            }else{
+                return true;  
+            }
+              
+        }
+
 
     </script>
     <body>
@@ -124,6 +179,7 @@
                             <c:when test="${empresa.id > 0}"> 
                                 <li class="menu-categorias"><a href="vagacategoria.jsp">Categorias</a></li>
                                 <li class="menu-minhas-vagas"><a href="vaga.jsp">Minhas vagas</a></li>
+                                <li><a href="#modal-dados-empresa"  onclick="getDadosEmpresa();">Meus dados</a></li>
                                 </c:when>
                                 <c:otherwise>
                                 <li class="menu-minhas-candidaturas"><a href="candidatura.jsp">Minhas candidaturas</a></li>
@@ -132,7 +188,6 @@
                             </c:choose> 
                         <li><a href="ProcessaLogout">Logout</a></li>
                     </ul>
-
                     <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
                 </div>
             </nav> 
@@ -140,6 +195,7 @@
                 <li><a href="vagas.jsp">Vagas</a></li>
                 <li><a href="vagacategoria.jsp">Categoria de Vaga</a></li>
                 <li><a href="vaga.jsp">Cadastro de Vagas</a></li>
+                <li><a href="#modal-dados-empresa"  onclick="getDadosEmpresa();">Meus dados</a></li>
                 <li><a href="ProcessaLogout">Logout</a></li>
             </ul>
         </main>
@@ -151,5 +207,49 @@
             <div class="modal-footer">
                 <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat lnkConfExcluir">Sim</a>
                 <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Não</a>
+            </div>
+        </div>
+        <div id="modal-dados-empresa" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <input id="command-delete" type="hidden" value="0" />
+                <h5>Alteração de dados</h5>
+                <div class="row">
+                    <form id="formDadosEmpresa" class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="txtNome" text="${empresa.nome}" type="text" class="validate" name="nome">
+                                <label for="txtNome">Nome</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="txtEmail" type="text" class="validate" name="email">
+                                <label for="txtEmail">E-mail</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="txtSenhaEmpresa" type="password" class="validate" name="senha">
+                                <label for="txtSenhaEmpresa">Senha</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="txtConfirmaSenhaEmpresa" type="password" class="validate" name="confirmasenha">
+                                <label for="txtConfirmaSenhaEmpresa">Confirma Senha:</label>
+                            </div>
+                        </div>
+                        <div class="row row-empresa none">
+                            <div class="input-field col s6">
+                                <input id="txtCnpj" type="text" class="cnpjmask" name="cnpj">
+                                <label for="txtCnpj">Cnpj</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="left" id="dvMsgDadosEmpresa">
+                </div>
+                <a id="lnkSalvarDadosEmpresa" href="#" onclick="salvarDadosEmpresa();" class="modal-action waves-effect waves-teal btn-flat">Salvar</a>
+                <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Fechar</a>
             </div>
         </div>
