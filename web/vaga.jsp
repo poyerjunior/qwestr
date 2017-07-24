@@ -12,7 +12,6 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Descrição</th>
                             <th>Categoria</th>
                             <th>Prova</th>
                             <th class="acoes">Candidaturas</th>
@@ -167,7 +166,6 @@
                     "ajax": servlet + "?tipoServlet=" + tipoServlet,
                     "columns": [
                         {"data": "nome"},
-                        {"data": "descricao"},
                         {"data": "VagaCategoria.nome"},
                         {"data": "prova"},
                         {"data": "candidaturas"},
@@ -178,7 +176,7 @@
                     },
                     "columnDefs": [
                         {
-                            "targets": 3,
+                            "targets": 2,
                             "data": null,
                             "render": function (data, type, full, meta) {
                                 if (data)
@@ -188,14 +186,14 @@
                             }
                         },
                         {
-                            "targets": 4,
+                            "targets": 3,
                             "data": null,
                             "render": function (data, type, full, meta) {
                                 return "<a class=\"lnkVisualizar\" href=\"#modal-candidaturas\" data-id=\"" + full.id + "\">Visualizar</a>";
                             }
                         },
                         {
-                            "targets": 5,
+                            "targets": 4,
                             "data": null,
                             "render": function (data, type, full, meta) {
                                 return "<div class=\"acoes\"><a class=\"lnkEdit\" href=\"#modal-cadastro\" data-id=\"" + full.id + "\"><i class=\"material-icons\">mode_edit</i></a>" +

@@ -394,4 +394,4 @@
                 Materialize.toast(msg, 4000);
             }
         </script>
-        <jsp:include page="footer.jsp"/>
+    <jsp:include page="footer.jsp"/>

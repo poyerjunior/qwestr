@@ -5599,7 +5599,6 @@ button.btn-floating {
   max-height: 70%;
   width: 70%;
   margin: auto;
-  overflow-y: auto;
   border-radius: 2px;
   will-change: top, opacity;
 }

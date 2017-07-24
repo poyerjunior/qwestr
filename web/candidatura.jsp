@@ -10,7 +10,7 @@
                         <tr>
                             <th>Vaga</th>
                             <th>Categoria</th>
-                            <th>Descrição</th>
+                            <th class="acoes">Descrição</th>
                             <th>Status</th>
                             <th class="acoes">Ações</th>
                         </tr>
@@ -54,6 +54,13 @@
                         $(".proximo").html("Próximo");
                     },
                     "columnDefs": [
+                        {
+                            "targets": 2,
+                            "data": null,
+                            "render": function (data, type, full, meta) {
+                                return "<div class=\"dv-tooltip-table-hover acoes\"><i class=\"material-icons\" style=\"color:#009688 !important;\">remove_red_eye</i><div class=\"dv-tooltip-table z-depth-3\">"+full.descricao+"</div></div>";
+                            }
+                        },
                         {
                             "targets": 3,
                             "data": null,
