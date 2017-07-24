@@ -131,6 +131,27 @@
                 }
             });
         }
+        
+        function getDadosCandidato() {
+            var servlet = "ProcessaDados"
+            var tipoServlet = "GETBYIDCANDIDATO";
+            var form = "formDadosCandidato";
+            var dvMsg = "dvMsgDadosCandidato";
+            $('#' + form)[0].reset();
+            getLoaderBar(dvMsg);
+            $('.modal-content').addClass("none");
+            $.ajax({
+                url: servlet + "?tipoServlet=" + tipoServlet,
+                type: "get",
+                data: null,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    JsonToForm(form, data);
+                    removeLoader();
+                    $('.modal-content').removeClass("none");
+                }
+            });
+        }
 
         function salvarDadosEmpresa() {
             var tipoServlet = "UPDATEEMPRESA";
@@ -156,14 +177,48 @@
                 });
             }
         }
+        
+        function salvarDadosCandidato() {
+            var tipoServlet = "UPDATECANDIDATO";
+            var servlet = "ProcessaDados"
+            var form = "formDadosCandidato";
+            var dvMsg = "dvMsgDadosCandidato";
+
+            if (!verfSenhaCandidato()) {
+                setToast("Senhas dinstintas!");
+                return false;
+            }
+            if (validaForm(form)) {
+                getLoaderBar(dvMsg);
+                $.ajax({
+                    url: servlet + "?tipoServlet=" + tipoServlet,
+                    type: "post",
+                    data: $("#" + form).serialize(),
+                    success: function (data) {
+                        setToast("Dados salvos com sucesso!");
+                        $('#modal-dados-candidato').modal('close');
+                        removeLoader();
+                    }
+                });
+            }
+        }
 
         function verfSenhaEmpresa() {
-            if (($("#txtSenhaEmpresa").val() != $("#txtConfirmaSenhaEmpresa").val())){
-                return false; 
-            }else{
-                return true;  
+            if (($("#txtSenhaEmpresa").val() != $("#txtConfirmaSenhaEmpresa").val())) {
+                return false;
+            } else {
+                return true;
             }
-              
+
+        }
+        
+        function verfSenhaCandidato() {
+            if (($("#txtDadosCandidatoSenha").val() != $("#txtDadosCandidatoConfirmaSenha").val())) {
+                return false;
+            } else {
+                return true;
+            }
+
         }
 
 
@@ -179,11 +234,12 @@
                             <c:when test="${empresa.id > 0}"> 
                                 <li class="menu-categorias"><a href="vagacategoria.jsp">Categorias</a></li>
                                 <li class="menu-minhas-vagas"><a href="vaga.jsp">Minhas vagas</a></li>
-                                <li><a href="#modal-dados-empresa"  onclick="getDadosEmpresa();">Meus dados</a></li>
+                                <li><a href="#modal-dados-empresa" onclick="getDadosEmpresa();">Meus dados</a></li>
                                 </c:when>
                                 <c:otherwise>
                                 <li class="menu-minhas-candidaturas"><a href="candidatura.jsp">Minhas candidaturas</a></li>
                                 <li class="menu-vagas"><a href="vagas.jsp">Vagas</a></li>
+                                <li><a href="#modal-dados-candidato" onclick="getDadosCandidato();">Meus dados</a></li>
                                 </c:otherwise>
                             </c:choose> 
                         <li><a href="ProcessaLogout">Logout</a></li>
@@ -211,14 +267,56 @@
         </div>
         <div id="modal-dados-empresa" class="modal modal-fixed-footer">
             <div class="modal-content">
-                <input id="command-delete" type="hidden" value="0" />
                 <h5>Alteração de dados</h5>
                 <div class="row">
                     <form id="formDadosEmpresa" class="col s12">
                         <div class="row">
                             <div class="input-field col s12">
-                                <input id="txtNome" text="${empresa.nome}" type="text" class="validate" name="nome">
-                                <label for="txtNome">Nome</label>
+                                <input id="txtDadosEmpresaNome" type="text" class="validate" name="nome">
+                                <label for="txtDadosEmpresaNome">Nome</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="txtDadosEmpresaEmail" type="text" class="validate" name="email">
+                                <label for="txtDadosEmpresaEmail">E-mail</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="txtSenhaEmpresa" type="password" class="validate" name="senha">
+                                <label for="txtSenhaEmpresa">Senha</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="txtDadosEmpresaConfirmaSenhaEmpresa" type="password" class="validate" name="confirmasenha">
+                                <label for="txtDadosEmpresaConfirmaSenhaEmpresa">Confirma Senha:</label>
+                            </div>
+                        </div>
+                        <div class="row row-empresa none">
+                            <div class="input-field col s6">
+                                <input id="txtDadosEmpresaCnpj" type="text" class="cnpjmask" name="cnpj">
+                                <label for="txtDadosEmpresaCnpj">Cnpj</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="left" id="dvMsgDadosEmpresa">
+                </div>
+                <a id="lnkSalvarDadosEmpresa" href="#" onclick="salvarDadosEmpresa();" class="modal-action waves-effect waves-teal btn-flat">Salvar</a>
+                <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Fechar</a>
+            </div>
+        </div>
+        <div id="modal-dados-candidato" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h5>Alteração de dados</h5>
+                <div class="row">
+                    <form id="formDadosCandidato" class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="txtDadosCandidatoNome" type="text" class="validate" name="nome">
+                                <label for="txtDadosCandidatoNome">Nome</label>
                             </div>
                         </div>
                         <div class="row">
@@ -229,27 +327,38 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s6">
-                                <input id="txtSenhaEmpresa" type="password" class="validate" name="senha">
-                                <label for="txtSenhaEmpresa">Senha</label>
+                                <input id="txtDadosCandidatoSenha" type="password" class="validate" name="senha">
+                                <label for="txtDadosCandidatoSenha">Senha</label>
                             </div>
                             <div class="input-field col s6">
-                                <input id="txtConfirmaSenhaEmpresa" type="password" class="validate" name="confirmasenha">
-                                <label for="txtConfirmaSenhaEmpresa">Confirma Senha:</label>
+                                <input id="txtDadosCandidatoConfirmaSenha" type="password" class="validate" name="confirmasenha">
+                                <label for="txtDadosCandidatoConfirmaSenha">Confirma Senha:</label>
                             </div>
                         </div>
-                        <div class="row row-empresa none">
+                        <div class="row row-candidato">
                             <div class="input-field col s6">
-                                <input id="txtCnpj" type="text" class="cnpjmask" name="cnpj">
-                                <label for="txtCnpj">Cnpj</label>
+                                <input id="txtDadosCandidatoCpf" type="text" class="validate cpfmask" name="cpf">
+                                <label for="txtDadosCandidatoCpf">Cpf</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <div class="file-field input-field">
+                                    <div class="btn">
+                                        <span>Currículo</span>
+                                        <input id="txtDadosCandidatoCurriculo" type="file" name="caminho" class="">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input id="txtDadosCandidatoCurriculo2" class="file-path" type="text" name="nomefile" class="">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="left" id="dvMsgDadosEmpresa">
+                <div class="left" id="dvMsgDadosCandidato">
                 </div>
-                <a id="lnkSalvarDadosEmpresa" href="#" onclick="salvarDadosEmpresa();" class="modal-action waves-effect waves-teal btn-flat">Salvar</a>
+                <a id="lnkSalvarDadosEmpresa" href="#" onclick="salvarDadosCandidato();" class="modal-action waves-effect waves-teal btn-flat">Salvar</a>
                 <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Fechar</a>
             </div>
         </div>

@@ -5,6 +5,8 @@
  */
 package Controller;
 
+import Model.Candidato;
+import Model.CandidatoDAO;
 import Model.Empresa;
 import Model.EmpresaDAO;
 import com.google.gson.Gson;
@@ -43,12 +45,13 @@ public class ProcessaDados extends HttpServlet {
 
         HttpSession session = request.getSession();
         Empresa empresa = (Empresa) session.getAttribute("empresa");
-
+        Candidato candidato = (Candidato) session.getAttribute("candidato");
+        
         Gson gson = new Gson();
         JsonObject jsonRetorno = new JsonObject();
         String tipoServlet = request.getParameter("tipoServlet");
 
-        if (empresa != null) {
+        if (empresa.getId() != 0) {
 
             if ("GETBYIDEMPRESA".equals(tipoServlet)) {
 
@@ -79,7 +82,40 @@ public class ProcessaDados extends HttpServlet {
                 empresa.setCnpj(cnpj);
                 EmpresaDAO.update(empresa);
             }
+        }else if (candidato.getId() != 0){
+            
+            if ("GETBYIDCANDIDATO".equals(tipoServlet)) {
+
+                int id = candidato.getId();
+                CandidatoDAO CandidatoDAO = new CandidatoDAO();
+                Candidato Candidato = new Candidato();
+                try {
+                    Candidato = CandidatoDAO.getById(id, false);
+                    String data = gson.toJson(Candidato);
+                    out.println(data);
+
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            if ("UPDATECANDIDATO".equals(tipoServlet)) {
+                String nome = request.getParameter("nome");
+                String email = request.getParameter("email");
+                String senha = request.getParameter("senha");
+                String cpf = request.getParameter("cpf");
+                
+                CandidatoDAO CandidatoDAO = new CandidatoDAO();
+
+                candidato.setNome(nome);
+                candidato.setEmail(email);
+                candidato.setSenha(senha);
+                candidato.setCpf(cpf);
+                CandidatoDAO.update(candidato);
+            }
+            
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

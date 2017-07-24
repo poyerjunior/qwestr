@@ -75,6 +75,7 @@
                                         "<div class=\"card small\">" +
                                         "<a href=\"ProcessaVagaDetalhe?tipoServlet=GETBYID&id=" + json.id + "\">" +
                                         "<div class=\"card-image waves-effect waves-block waves-light teal\" style=\"height: 60%;\">" +
+                                        "<div class=\"card-categoria\">"+json.VagaCategoria.nome+"</div>" +
                                         "</div>" +
                                         "</a>" +
                                         "<div class=\"card-content\">" +

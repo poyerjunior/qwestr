@@ -639,3 +639,15 @@ body{
 .lnkDelete{
     color:#f4511e;
 }
+
+.card-categoria{
+    color: white;
+    height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    font-size: 30px;
+}
