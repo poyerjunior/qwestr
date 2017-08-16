@@ -9,7 +9,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Nice</title>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.min.css">
@@ -24,6 +24,8 @@
         <script src="js/jquery.mask.js"></script>
     </head>
     <script type="text/javascript">
+        var files;
+
         $(document).ready(function () {
             carregaMaster();
         });
@@ -47,6 +49,16 @@
                 deletar($("#command-delete").val());
             });
 
+            $('input[type=radio][name=rblcurriculo]').change(function () {
+                if (this.value == 1) {
+                    $(".dv-durriculo").show();
+                } else {
+                    $(".dv-durriculo").hide();
+                }
+            });
+
+            $('input[type=file]').on('change', prepareUpload);
+            $('#formDadosCandidato').on('submit', uploadFiles);
         }
 
         function JsonToForm(form, data, span) {
@@ -131,7 +143,7 @@
                 }
             });
         }
-        
+
         function getDadosCandidato() {
             var servlet = "ProcessaDados"
             var tipoServlet = "GETBYIDCANDIDATO";
@@ -139,6 +151,7 @@
             var dvMsg = "dvMsgDadosCandidato";
             $('#' + form)[0].reset();
             getLoaderBar(dvMsg);
+            $(".dv-durriculo").hide();
             $('.modal-content').addClass("none");
             $.ajax({
                 url: servlet + "?tipoServlet=" + tipoServlet,
@@ -147,8 +160,59 @@
                 success: function (data) {
                     data = JSON.parse(data);
                     JsonToForm(form, data);
+                    $(".dv-curriculo-link").html("<a target=\"_blank\" href=\"uploadFiles/" + data.curriculo + "\" data-id=\"" + data.id + "\">Meu Currículo</a>");
                     removeLoader();
                     $('.modal-content').removeClass("none");
+                }
+            });
+        }
+
+        function uploadFiles(event) {
+            var id;
+        <c:choose>
+                <c:when test="${candidato != null}">
+                    id = ${candidato.id};
+                </c:when>
+                <c:otherwise>
+                    id = 0;
+                </c:otherwise>
+        </c:choose>
+            event.stopPropagation(); // Stop stuff happening
+            event.preventDefault(); // Totally stop stuff happening
+
+            // START A LOADING SPINNER HERE
+
+            // Create a formdata object and add the files
+            var data = new FormData();
+            $.each(files, function (key, value)
+            {
+                data.append(key, value);
+            });
+            $.ajax({
+                url: 'ProcessaUpload?id=' + id,
+                type: 'POST',
+                data: data,
+                cache: false,
+                processData: false, // Don't process the files
+                contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                success: function (data, textStatus, jqXHR)
+                {
+                    if (typeof data.error === 'undefined')
+                    {
+                        // Success so call function to process the form
+                        //submitForm(event, data);
+                        $('#modal-cadastro').modal('close');
+                    } else
+                    {
+                        // Handle errors here
+                        console.log('ERRORS: ' + data.error);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    // Handle errors here
+                    console.log('ERRORS: ' + textStatus);
+                    // STOP LOADING SPINNER
                 }
             });
         }
@@ -177,7 +241,7 @@
                 });
             }
         }
-        
+
         function salvarDadosCandidato() {
             var tipoServlet = "UPDATECANDIDATO";
             var servlet = "ProcessaDados"
@@ -195,12 +259,20 @@
                     type: "post",
                     data: $("#" + form).serialize(),
                     success: function (data) {
+                        if ($('input[type=radio][name=rblcurriculo]:checked').val() == 1) {
+                            $("#formDadosCandidato").submit();
+                        }
+
                         setToast("Dados salvos com sucesso!");
                         $('#modal-dados-candidato').modal('close');
                         removeLoader();
                     }
                 });
             }
+        }
+
+        function prepareUpload(event) {
+            files = event.target.files;
         }
 
         function verfSenhaEmpresa() {
@@ -211,7 +283,7 @@
             }
 
         }
-        
+
         function verfSenhaCandidato() {
             if (($("#txtDadosCandidatoSenha").val() != $("#txtDadosCandidatoConfirmaSenha").val())) {
                 return false;
@@ -225,6 +297,7 @@
     </script>
     <body>
         <jsp:useBean id="empresa" scope="session" class="Model.Empresa" />
+        <jsp:useBean id="candidado" scope="session" class="Model.Candidato" />
         <main style="padding-bottom: 64px;">
             <nav class="teal" role="navigation">
                 <div class="nav-wrapper container">
@@ -302,7 +375,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="left" id="dvMsgDadosEmpresa">
+                <div class="dvMsg" id="dvMsgDadosEmpresa">
                 </div>
                 <a id="lnkSalvarDadosEmpresa" href="#" onclick="salvarDadosEmpresa();" class="modal-action waves-effect waves-teal btn-flat">Salvar</a>
                 <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Fechar</a>
@@ -340,7 +413,22 @@
                                 <input id="txtDadosCandidatoCpf" type="text" class="validate cpfmask" name="cpf">
                                 <label for="txtDadosCandidatoCpf">Cpf</label>
                             </div>
+                            <div class="col s6 dv-curriculo-link">
+
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="input-field col s6">
+                                <span>
+                                    <input name="rblcurriculo" type="radio" id="rblCurriculoAlterar" value="1"/>
+                                    <label for="rblCurriculoAlterar">Alterar currículo</label>
+                                </span>
+                                <span>
+                                    <input name="rblcurriculo" type="radio" id="rblNaoCurriculoAlterar" value="0"  checked="checked"/>
+                                    <label for="rblNaoCurriculoAlterar">Não alterar currículo</label>
+                                </span>
+                            </div>
+                            <div class="dv-durriculo input-field col s6">
                                 <div class="file-field input-field">
                                     <div class="btn">
                                         <span>Currículo</span>
@@ -356,7 +444,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="left" id="dvMsgDadosCandidato">
+                <div class="dvMsg" id="dvMsgDadosCandidato">
                 </div>
                 <a id="lnkSalvarDadosEmpresa" href="#" onclick="salvarDadosCandidato();" class="modal-action waves-effect waves-teal btn-flat">Salvar</a>
                 <a href="#" class="modal-action modal-close waves-effect waves-teal btn-flat">Fechar</a>

@@ -233,7 +233,7 @@ public class CandidatoDAO {
                 candidato.setId(rs.getInt("id"));
                 candidato.setNome(rs.getString("nome"));
                 candidato.setCpf(rs.getString("cpf"));
-                candidato.setCurriculo(rs.getString("cpf"));
+                candidato.setCurriculo(rs.getString("curriculo"));
                 candidato.setEmail(rs.getString("email"));
                 candidato.setSenha(rs.getString("senha"));
             }

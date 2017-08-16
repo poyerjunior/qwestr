@@ -27,7 +27,7 @@
         <script type="text/javascript">
             var dvMsg = "dvAguarde";
             var servlet = "ProcessaVagas"
-            var qtd = 6;
+            var qtd = 10;
             $(document).ready(function () {
                 carregaPagina();
             });

@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Nice</title>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
         <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.min.css">
@@ -42,7 +42,7 @@
     <body>
         <nav class="teal" role="navigation">
             <div class="nav-wrapper container">
-                <a id="logo-container" href="#" class="brand-logo">Logo</a>
+                <a id="logo-container" href="#" class="brand-logo">Nice Jobs</a>
                 <ul class="right hide-on-med-and-down">
                     <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
                 </ul>
@@ -58,9 +58,9 @@
             <div class="section no-pad-bot">
                 <div class="container">
                     <br><br>
-                    <h1 class="header center teal-text text-lighten-2">Nice Vagas</h1>
+                    <h1 class="header center teal-text text-lighten-2">Nice Jobs</h1>
                     <div class="row center">
-                        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+                        <h5 class="header col s12 light"></h5>
                     </div>
                     <div class="row center">
                         <a id="lnkCadastre" onclick="$('#formCadastro')[0].reset();resetModalCadastro(0);" href="#modal-cadastro" class="btn-large waves-effect waves-light teal lighten-1">Cadastre-se</a>
