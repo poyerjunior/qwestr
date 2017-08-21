@@ -40,20 +40,21 @@
 
     </script>
     <body>
-        <nav class="teal" role="navigation">
-            <div class="nav-wrapper container">
-                <a id="logo-container" href="#" class="brand-logo">Nice Jobs</a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
-                </ul>
-                <ul id="nav-mobile" class="side-nav">
-                    <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
-                </ul>
-                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-            </div>
-        </nav>  
-        <div class="margin-nav">
-        </div>
+        <main style="padding-bottom: 64px;">
+            <nav class="teal" role="navigation">
+                <div class="nav-wrapper container">
+                    <a id="logo-container" href="#" class="brand-logo">Nice Jobs</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
+                    </ul>
+
+                    <a href="#" data-activates="nav-mobile" class="button-collapse white-text"><i class="material-icons">menu</i></a>
+                </div>
+            </nav>
+            <ul id="nav-mobile" class="side-nav">
+                <li><a href="#modal-login" onclick="$('#formLogin')[0].reset();">Login</a></li>
+            </ul>
+        </main>
         <div id="index-banner" class="parallax-container">
             <div class="section no-pad-bot">
                 <div class="container">
@@ -394,4 +395,4 @@
                 Materialize.toast(msg, 4000);
             }
         </script>
-    <jsp:include page="footer.jsp"/>
+        <jsp:include page="footer.jsp"/>

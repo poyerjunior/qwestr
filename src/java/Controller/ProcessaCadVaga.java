@@ -9,6 +9,7 @@ import Model.CandidaturaDAO;
 import Model.Candidatura;
 import Model.CandidaturaStatusDAO;
 import Model.Empresa;
+import Model.NotificacaoDAO;
 import Model.Vaga;
 import Model.VagaCategoria;
 import Model.VagaCategoriaDAO;
@@ -175,6 +176,8 @@ public class ProcessaCadVaga extends HttpServlet {
                         Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(2));
                     }
                     CandidaturaDAO.update(Candidatura);
+                    NotificacaoDAO n = new NotificacaoDAO();
+                    n.setNotifiacao(id);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(ProcessaCadVaga.class.getName()).log(Level.SEVERE, null, ex);
                 }

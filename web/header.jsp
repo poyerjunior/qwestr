@@ -59,6 +59,8 @@
 
             $('input[type=file]').on('change', prepareUpload);
             $('#formDadosCandidato').on('submit', uploadFiles);
+
+            getNotificacao();
         }
 
         function JsonToForm(form, data, span) {
@@ -170,12 +172,12 @@
         function uploadFiles(event) {
             var id;
         <c:choose>
-                <c:when test="${candidato != null}">
-                    id = ${candidato.id};
-                </c:when>
-                <c:otherwise>
-                    id = 0;
-                </c:otherwise>
+            <c:when test="${candidato != null}">
+            id = ${candidato.id};
+            </c:when>
+            <c:otherwise>
+            id = 0;
+            </c:otherwise>
         </c:choose>
             event.stopPropagation(); // Stop stuff happening
             event.preventDefault(); // Totally stop stuff happening
@@ -293,6 +295,25 @@
 
         }
 
+        function getNotificacao() {
+            var servlet = "ProcessaNotificacao";
+            var tipoServlet = "getNotificacao";
+            $.ajax({
+                url: servlet + "?tipoServlet=" + tipoServlet,
+                type: "post",
+                data: null,
+                success: function (data) {
+                    if (data > 0) {
+                        $(".dv-notificacao").show();
+                        $(".dv-notificacao").html(data);
+                    } else {
+                        $(".dv-notificacao").hide();
+                        $(".dv-notificacao").html(data);
+                    }
+                }
+            });
+        }
+
 
     </script>
     <body>
@@ -310,21 +331,47 @@
                                 <li><a href="#modal-dados-empresa" onclick="getDadosEmpresa();">Meus dados</a></li>
                                 </c:when>
                                 <c:otherwise>
-                                <li class="menu-minhas-candidaturas"><a href="candidatura.jsp">Minhas candidaturas</a></li>
+                                <li class="menu-minhas-candidaturas">
+                                    <a href="candidatura.jsp">
+                                        Minhas candidaturas
+                                        <div style="position:relative;">
+                                            <div style="display:none; position: absolute;top: -58px; right: -11px; width: 25px; height: 25px; line-height: 25px;" class="btn btn-floating pulse dv-notificacao">
+                                                1
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
                                 <li class="menu-vagas"><a href="vagas.jsp">Vagas</a></li>
                                 <li><a href="#modal-dados-candidato" onclick="getDadosCandidato();">Meus dados</a></li>
                                 </c:otherwise>
                             </c:choose> 
                         <li><a href="ProcessaLogout">Logout</a></li>
                     </ul>
-                    <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+                    <a href="#" data-activates="nav-mobile" class="button-collapse white-text"><i class="material-icons">menu</i></a>
                 </div>
             </nav> 
             <ul id="nav-mobile" class="side-nav">
-                <li><a href="vagas.jsp">Vagas</a></li>
-                <li><a href="vagacategoria.jsp">Categoria de Vaga</a></li>
-                <li><a href="vaga.jsp">Cadastro de Vagas</a></li>
-                <li><a href="#modal-dados-empresa"  onclick="getDadosEmpresa();">Meus dados</a></li>
+                <c:choose>
+                    <c:when test="${empresa.id > 0}"> 
+                        <li class="menu-categorias"><a href="vagacategoria.jsp">Categorias</a></li>
+                        <li class="menu-minhas-vagas"><a href="vaga.jsp">Minhas vagas</a></li>
+                        <li><a href="#modal-dados-empresa" onclick="getDadosEmpresa();">Meus dados</a></li>
+                        </c:when>
+                        <c:otherwise>
+                        <li class="menu-minhas-candidaturas">
+                            <a href="candidatura.jsp">
+                                Minhas candidaturas
+                                <div style="position:relative;">
+                                    <div style="display:none; position: absolute;top: -58px; right: -11px; width: 25px; height: 25px; line-height: 25px;" class="btn btn-floating pulse dv-notificacao">
+                                        1
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="menu-vagas"><a href="vagas.jsp">Vagas</a></li>
+                        <li><a href="#modal-dados-candidato" onclick="getDadosCandidato();">Meus dados</a></li>
+                        </c:otherwise>
+                    </c:choose> 
                 <li><a href="ProcessaLogout">Logout</a></li>
             </ul>
         </main>

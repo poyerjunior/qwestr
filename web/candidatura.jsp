@@ -35,6 +35,8 @@
                 $('body').on('click', 'a.lnkDelete', function () {
                     setRemover($(this).data("id"));
                 });
+                
+                visualizaNotificacao();
             }
 
             function getList() {
@@ -58,7 +60,7 @@
                             "targets": 2,
                             "data": null,
                             "render": function (data, type, full, meta) {
-                                return "<div class=\"dv-tooltip-table-hover acoes\"><i class=\"material-icons\" style=\"color:#009688 !important;\">remove_red_eye</i><div class=\"dv-tooltip-table z-depth-3\">"+full.descricao+"</div></div>";
+                                return "<div class=\"dv-tooltip-table-hover acoes\"><i class=\"material-icons\" style=\"color:#009688 !important;\">remove_red_eye</i><div class=\"dv-tooltip-table z-depth-3\">" + full.descricao + "</div></div>";
                             }
                         },
                         {
@@ -85,6 +87,19 @@
                 });
             }
 
+            function visualizaNotificacao() {
+                var servlet = "ProcessaNotificacao";
+                var tipoServlet = "setVisualizacao";
+                $.ajax({
+                    url: servlet + "?tipoServlet=" + tipoServlet,
+                    type: "post",
+                    data: null,
+                    success: function (data) {
+                        $(".dv-notificacao").hide();
+                    }
+                });
+            }
+
             function setRemover(idCandidatura) {
                 var tipoServlet = "SETREMOVET";
                 $.ajax({
@@ -95,18 +110,6 @@
                     },
                     error: function (data) {
                         setToast("Não é possível deletar!");
-                    }
-                });
-            }
-
-            function teste() {
-                var tipoServelet = "GETLIST";
-                $.ajax({
-                    type: "post",
-                    url: "ProcessaCadVagaCategoria", //this is my servlet
-                    data: "tipoServelet=" + tipoServelet,
-                    success: function (result) {
-                        console.log(result);
                     }
                 });
             }

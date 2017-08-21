@@ -18,7 +18,7 @@
                 </table>
             </div>
         </div>
-        <div id="modal-cadastro" class="modal"> 
+        <div id="modal-cadastro" class="modal  modal-fixed-footer""> 
             <div class="modal-content">
                 <h4>Novo registro</h4>
                 <div class="row margin-0">
