@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.util.List;
+
 /**
  *
  * @author pcstr
@@ -12,7 +14,16 @@ package Model;
 public class Prova {
     private int id;
     private String nome;
+    private List<Questao> lstQuestao;
 
+    public List<Questao> getLstQuestao() {
+        return lstQuestao;
+    }
+
+    public void setLstQuestao(List<Questao> lstQuestao) {
+        this.lstQuestao = lstQuestao;
+    }
+    
     public int getId() {
         return id;
     }

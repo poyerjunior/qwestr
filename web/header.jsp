@@ -342,6 +342,7 @@
                                     </a>
                                 </li>
                                 <li class="menu-vagas"><a href="vagas.jsp">Vagas</a></li>
+                                <li class="menu-prova"><a href="prova.jsp">Prova</a></li>
                                 <li><a href="#modal-dados-candidato" onclick="getDadosCandidato();">Meus dados</a></li>
                                 </c:otherwise>
                             </c:choose> 
