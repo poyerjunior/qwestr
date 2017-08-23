@@ -9,7 +9,7 @@
             </div>
             <div class="row margin-bt-20 margin-0">
                 <div id="questao">
-                    
+
                 </div>
             </div>
         </div>
@@ -49,49 +49,50 @@
 
             function getQuestao() {
                 var questao = "";
-                if(prova.lstQuestao.length > 0){
+                if (prova.lstQuestao.length > 0) {
                     questao = "<div id=\"enunciado\">" +
                             prova.lstQuestao[0].enunciado +
-                    "</div>" +
-                    "<div id=\"alternativas\">" +
-                        "<p>" +
+                            "</div>" +
+                            "<div id=\"alternativas\">" +
+                            "<p>" +
                             "<span class=\"nome-alternativa\">A</span>" +
                             "<input value=\"a\" name=\"rblAlternativa\" type=\"radio\" id=\"alt-a\" />" +
-                            "<label for=\"alt-a\">"+ prova.lstQuestao[0].a +"</label>" +
-                        "</p>" +
-                        "<p>" +
+                            "<label for=\"alt-a\">" + prova.lstQuestao[0].a + "</label>" +
+                            "</p>" +
+                            "<p>" +
                             "<span class=\"nome-alternativa\">B</span>" +
                             "<input value=\"b\" name=\"rblAlternativa\" type=\"radio\" id=\"alt-b\" />" +
-                            "<label for=\"alt-b\">"+ prova.lstQuestao[0].b +"</label>" +
-                        "</p>" +
-                        "<p>" +
+                            "<label for=\"alt-b\">" + prova.lstQuestao[0].b + "</label>" +
+                            "</p>" +
+                            "<p>" +
                             "<span class=\"nome-alternativa\">C</span>" +
                             "<input value=\"c\" name=\"rblAlternativa\" type=\"radio\" id=\"alt-c\" />" +
-                            "<label for=\"alt-c\">"+ prova.lstQuestao[0].c +"</label>" +
-                        "</p>" +
-                        "<p>" +
+                            "<label for=\"alt-c\">" + prova.lstQuestao[0].c + "</label>" +
+                            "</p>" +
+                            "<p>" +
                             "<span class=\"nome-alternativa\">D</span>" +
                             "<input value=\"d\" name=\"rblAlternativa\" type=\"radio\" id=\"alt-d\" />" +
-                            "<label for=\"alt-d\">"+ prova.lstQuestao[0].d +"</label>" +
-                        "</p>" +
-                        "<p>" +
+                            "<label for=\"alt-d\">" + prova.lstQuestao[0].d + "</label>" +
+                            "</p>" +
+                            "<p>" +
                             "<span class=\"nome-alternativa\">E</span>" +
                             "<input value=\"e\" name=\"rblAlternativa\" type=\"radio\" id=\"alt-e\" />" +
-                            "<label for=\"alt-e\">"+ prova.lstQuestao[0].e +"</label>" +
-                        "</p>" +
-                    "</div>" +
-                    "<div class=\"row margin-bt-20 margin-0 right\">" +
-                        "<a onclick=\"responder();\" class=\"waves-effect waves-light btn\">Responder</a>" +
-                    "</div>";
-                }else{
-                    questao = "Você concluiu a prova."
+                            "<label for=\"alt-e\">" + prova.lstQuestao[0].e + "</label>" +
+                            "</p>" +
+                            "</div>" +
+                            "<div class=\"row margin-bt-20 margin-0 right\">" +
+                            "<a onclick=\"responder();\" class=\"waves-effect waves-light btn\">Responder</a>" +
+                            "</div>";
+                    $("#questao").html(questao);
+                    removeLoader();
+                } else {
+                    getAcertos();
                 }
-        
-                $("#questao").html(questao);
-                removeLoader();
+
+
             }
-            
-            function responder(){
+
+            function responder() {
                 getLoaderBar("dv-aguarde-prova");
                 var resposta = $('input[name="rblAlternativa"]:checked').val();
                 var tipoServlet = "setResposta";
@@ -99,9 +100,22 @@
                 $.ajax({
                     url: servlet + "?tipoServlet=" + tipoServlet,
                     type: "post",
-                    data: "resposta="+resposta+"&idQuestao=" + prova.lstQuestao[0].id,
+                    data: "resposta=" + resposta + "&idQuestao=" + prova.lstQuestao[0].id,
                     success: function (data) {
                         atzProva();
+                    }
+                });
+            }
+
+            function getAcertos() {
+                var tipoServlet = "getAcertos";
+                $.ajax({
+                    url: servlet + "?tipoServlet=" + tipoServlet,
+                    type: "post",
+                    data: null,
+                    success: function (data) {
+                        $("#questao").html("Você concluiu a prova com " + data + " acerto(s).");
+                        removeLoader();
                     }
                 });
             }
