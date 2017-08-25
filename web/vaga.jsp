@@ -81,6 +81,7 @@
                                 <th>Candidato</th>
                                 <th>CPF</th>
                                 <th>Data</th>
+                                <th>Prova</th>
                                 <th>Currículo</th>
                                 <th>Status</th>
                             </tr>
@@ -275,6 +276,7 @@
                         {"data": "Candidato.nome"},
                         {"data": "Candidato.cpf"},
                         {"data": "date"},
+                        {"data": "Candidato.questoes"},
                         {"data": "Candidato.curriculo"},
                         {"data": "Ações"}
                     ],
@@ -283,14 +285,14 @@
                     },
                     "columnDefs": [
                         {
-                            "targets": 3,
+                            "targets": 4,
                             "data": null,
                             "render": function (data, type, full, meta) {
                                 return "<a target=\"_blank\" href=\"uploadFiles/" + full.Candidato.curriculo + "\" data-id=\"" + full.id + "\">Visualizar</a>";
                             }
                         },
                         {
-                            "targets": 4,
+                            "targets": 5,
                             "data": null,
                             "render": function (data, type, full, meta) {
                                 if ((full.CandidaturaStatus.id == 1))

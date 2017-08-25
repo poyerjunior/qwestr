@@ -114,7 +114,19 @@
                     type: "post",
                     data: null,
                     success: function (data) {
-                        $("#questao").html("Você concluiu a prova com " + data + " acerto(s).");
+                        getQuestoes(data);
+                    }
+                });
+            }
+            
+            function getQuestoes(nAcertos) {
+                var tipoServlet = "getQuestoes";
+                $.ajax({
+                    url: servlet + "?tipoServlet=" + tipoServlet,
+                    type: "post",
+                    data: null,
+                    success: function (data) {
+                        $("#questao").html("Você concluiu a prova com " + nAcertos + " acerto(s) de um total de " + data + " questões.");
                         removeLoader();
                     }
                 });

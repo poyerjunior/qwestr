@@ -278,7 +278,7 @@
         }
 
         function verfSenhaEmpresa() {
-            if (($("#txtSenhaEmpresa").val() != $("#txtConfirmaSenhaEmpresa").val())) {
+            if (($("#txtSenhaEmpresa").val() != $("#txtDadosEmpresaConfirmaSenhaEmpresa").val())) {
                 return false;
             } else {
                 return true;

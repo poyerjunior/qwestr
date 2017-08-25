@@ -16,10 +16,18 @@ public class Candidato {
     private String nome;
     private String cpf;
     private String curriculo;
-    private double nota;
     private String email;
     private String senha;
     private List<Candidatura> lstcandidatura;
+    private String questoes;
+
+    public String getQuestoes() {
+        return questoes;
+    }
+
+    public void setQuestoes(String questoes) {
+        this.questoes = questoes;
+    }
 
     public List<Candidatura> getLstcandidatura() {
         return lstcandidatura;
@@ -59,14 +67,6 @@ public class Candidato {
 
     public void setCurriculo(String curriculo) {
         this.curriculo = curriculo;
-    }
-
-    public double getNota() {
-        return nota;
-    }
-
-    public void setNota(double nota) {
-        this.nota = nota;
     }
 
     public String getEmail() {

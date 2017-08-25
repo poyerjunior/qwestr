@@ -90,6 +90,15 @@ public class ProcessaProva extends HttpServlet {
                     Logger.getLogger(ProcessaProva.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            
+            if ("getQuestoes".equals(tipoServlet)) {
+                QuestaoDAO qDAO = new QuestaoDAO();
+                try {
+                    out.println(qDAO.getQuestoes());
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProcessaProva.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         } else {
             out.println("ERRO_DESLOGAR");
         }

@@ -23,7 +23,46 @@ public class QuestaoDAO {
     private String stmtCorretas = "select count(*) qtd from candidato_questao\n"
             + "inner join questao on questao.id = candidato_questao.Questao_id\n"
             + "where candidato_questao.reposta = questao.correta and candidato_questao.Candidato_id = ?;";
-    
+    private String stmtQuestoes = "select count(*) qtd from questao;";
+
+    public int getQuestoes() throws SQLException {
+        com.mysql.jdbc.Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int qtd = 0;
+        try {
+            con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
+            stmt = con.prepareStatement(stmtQuestoes);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // criando o objeto Grupo
+                qtd = rs.getInt("qtd");
+            }
+            return qtd;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar result set. Ex=" + ex.getMessage());
+            };
+            try {
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
+            };
+            try {
+                con.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
+            };
+        }
+
+    }
+
     public int getAcertos(int idCandidato) throws SQLException {
         com.mysql.jdbc.Connection con = null;
         PreparedStatement stmt = null;

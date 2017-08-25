@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class CandidatoDAO {
 
     private String stmtInsert = "insert into candidato(nome, cpf, curriculo, email, senha) values(?,?,?,?,?);";
-    private String stmtUpdate = "update candidato set nome=?, cpf=?, curriculo=?, email=?, senha=?, nota=? where id=?";
+    private String stmtUpdate = "update candidato set nome=?, cpf=?, curriculo=?, email=?, senha=? where id=?";
     private String stmtSelect = "select * from candidato";
     private String stmtSelectById = "select * from candidato where id =?";
     private String stmtDelete = "delete from candidato where id = ?";
@@ -81,8 +81,7 @@ public class CandidatoDAO {
             stmt.setString(3, Candidato.getCurriculo());
             stmt.setString(4, Candidato.getEmail());
             stmt.setString(5, Candidato.getSenha());
-            stmt.setDouble(6, Candidato.getNota());
-            stmt.setDouble(7, Candidato.getId());
+            stmt.setDouble(6, Candidato.getId());
 
             stmt.executeUpdate();
 
@@ -123,7 +122,13 @@ public class CandidatoDAO {
                 Candidato.setCurriculo(rs.getString("curriculo"));
                 Candidato.setEmail(rs.getString("email"));
                 Candidato.setSenha(rs.getString("senha"));
-                Candidato.setNota(rs.getDouble("nota"));
+                
+                QuestaoDAO qDAO = new QuestaoDAO();
+                int nAcertos = qDAO.getAcertos(rs.getInt("id"));
+                int nQuestoes = qDAO.getQuestoes();
+                
+                Candidato.setQuestoes(nAcertos + " acerto(s) de " + nQuestoes + " questões.");
+                
                 CandidaturaDAO cDAO = new CandidaturaDAO();
                 Candidato.setLstcandidatura(cDAO.getListaByCandidato(rs.getInt("id")));
                 lstCandidato.add(Candidato);
@@ -169,7 +174,13 @@ public class CandidatoDAO {
                 Candidato.setCurriculo(rs.getString("curriculo"));
                 Candidato.setEmail(rs.getString("email"));
                 Candidato.setSenha(rs.getString("senha"));
-                Candidato.setNota(rs.getDouble("nota"));
+                
+                QuestaoDAO qDAO = new QuestaoDAO();
+                int nAcertos = qDAO.getAcertos(rs.getInt("id"));
+                int nQuestoes = qDAO.getQuestoes();
+                
+                Candidato.setQuestoes(nAcertos + " acerto(s) de " + nQuestoes + " questões.");
+                
                 if(trazercandidatura){
                     CandidaturaDAO cDAO = new CandidaturaDAO();
                     Candidato.setLstcandidatura(cDAO.getListaByCandidato(rs.getInt("id")));
