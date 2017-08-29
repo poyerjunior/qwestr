@@ -44,7 +44,11 @@
                     url: "ProcessaVagaDetalhe", //this is my servlet
                     data: "tipoServlet=" + tipoServlet + "&idVaga=" + idVaga,
                     success: function (result) {
-                        location.reload();
+                        if ($.trim(result) == "ERRO_PROVA") {
+                            setToast("É preciso realizar a prova para se candidatar à esta vaga.");
+                        }else{
+                            location.reload();
+                        }
                     }
                 });
             }

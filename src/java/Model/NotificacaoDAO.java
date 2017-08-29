@@ -23,6 +23,7 @@ public class NotificacaoDAO {
             + "where notificacao.visualizado = 0 and candidatura.Candidato_id = ?;";
     private String stmtVisualizaNOtificacao = "update notificacao set visualizado = 1 where Candidatura_id in (select id from candidatura where Candidato_id = ?);";
     private String stmtSetNotificacao = "insert into notificacao (visualizado, Candidatura_id) values (false, ?);";
+    private String stmtDelete = "delete from notificacao where Candidatura_id = ?;";
 
     public int getNotificacao(int id) throws ClassNotFoundException {
         Connection con = null;
@@ -86,6 +87,7 @@ public class NotificacaoDAO {
         PreparedStatement stmt = null;
         int idObjeto = 0;
         try {
+            delete(id);
             con = ConnectionFactory.getConnection();
             stmt = con.prepareStatement(stmtSetNotificacao, Statement.RETURN_GENERATED_KEYS);
 
@@ -97,6 +99,32 @@ public class NotificacaoDAO {
             while (rs.next()) {
                 idObjeto = rs.getInt(1);
             }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
+            };
+            try {
+                con.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
+            };
+        }
+    }
+
+    public void delete(int id) {
+        com.mysql.jdbc.Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+
+            con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
+            stmt = con.prepareStatement(stmtDelete);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

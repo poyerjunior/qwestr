@@ -322,7 +322,7 @@
         <main style="padding-bottom: 64px;">
             <nav class="teal" role="navigation">
                 <div class="nav-wrapper container">
-                    <a id="logo-container" href="#" class="brand-logo">Logo</a>
+                    <a id="logo-container" href="#" class="brand-logo">Nice Jobs</a>
                     <ul class="right hide-on-med-and-down">
                         <c:choose>
                             <c:when test="${empresa.id > 0}"> 

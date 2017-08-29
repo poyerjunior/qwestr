@@ -6,15 +6,19 @@
 package Controller;
 
 import Model.Candidato;
+import Model.CandidatoDAO;
 import Model.Candidatura;
 import Model.CandidaturaDAO;
 import Model.CandidaturaStatusDAO;
 import Model.Empresa;
+import Model.ProvaDAO;
+import Model.QuestaoDAO;
 import Model.Vaga;
 import Model.VagaDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -89,17 +93,50 @@ public class ProcessaVagaDetalhe extends HttpServlet {
                 CandidaturaStatusDAO CandidaturaStatusDAO = new CandidaturaStatusDAO();
                 VagaDAO VagaDAO = new VagaDAO();
                 Candidatura Candidatura = new Candidatura();
-                java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-                Candidatura.setCandidato(Candidato);
-                Candidatura.setDate(date);
-                try {
-                    Candidatura.setVaga(VagaDAO.getById(idVaga, true));
-                    Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(3));
 
+                Vaga Vaga = new Vaga();
+                try {
+                    Vaga = VagaDAO.getById(idVaga, true);
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(ProcessaVagaDetalhe.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                CandidaturaDAO.insert(Candidatura);
+
+                if (Vaga.isProva()) {
+                    ProvaDAO ProvaDAO = new ProvaDAO();
+                    QuestaoDAO qDAO = new QuestaoDAO();
+                    try {
+                        if (ProvaDAO.getProva(Candidato.getId()).getLstQuestao().size() == 0) {
+                            java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                            Candidatura.setCandidato(Candidato);
+                            Candidatura.setDate(date);
+                            try {
+                                Candidatura.setVaga(Vaga);
+                                Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(3));
+                                
+                            } catch (ClassNotFoundException ex) {
+                                Logger.getLogger(ProcessaVagaDetalhe.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            CandidaturaDAO.insert(Candidatura);
+                        }else{
+                            out.println("ERRO_PROVA");
+                        }
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(ProcessaVagaDetalhe.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                    Candidatura.setCandidato(Candidato);
+                    Candidatura.setDate(date);
+                    try {
+                        Candidatura.setVaga(Vaga);
+                        Candidatura.setCandidaturaStatus(CandidaturaStatusDAO.getById(3));
+
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(ProcessaVagaDetalhe.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    CandidaturaDAO.insert(Candidatura);
+                }
+
             }
 
             if ("DELETECANDIDATURA".equals(tipoServlet)) {

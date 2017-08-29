@@ -313,7 +313,8 @@ public class CandidaturaDAO {
         com.mysql.jdbc.Connection con = null;
         PreparedStatement stmt = null;
         try {
-
+            NotificacaoDAO n = new NotificacaoDAO();
+            n.delete(id);
             con = (com.mysql.jdbc.Connection) ConnectionFactory.getConnection();
             stmt = con.prepareStatement(stmtDelete);
             stmt.setInt(1, id);
