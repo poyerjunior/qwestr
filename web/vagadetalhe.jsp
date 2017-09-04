@@ -8,9 +8,9 @@
             <div class="section margin-0" style="padding:0px;">
                 <h4 class="margin-0">${vaga.nome}</h4>
                 <span class="spn-categoria">Categoria: ${vagacategoria.nome}</span>
-                <p>
+                <pre>
                     ${vaga.descricao}
-                </p>
+                </pre>
                 <div class="divider"></div>
             </div>
             <div class="row  margin-0">
@@ -34,7 +34,7 @@
             });
 
             function carregaPagina() {
-
+                $("pre").html($("pre").html().trim());
             }
 
             function setCandidatar(idVaga) {
@@ -46,7 +46,7 @@
                     success: function (result) {
                         if ($.trim(result) == "ERRO_PROVA") {
                             setToast("É preciso realizar a prova para se candidatar à esta vaga.");
-                        }else{
+                        } else {
                             location.reload();
                         }
                     }
