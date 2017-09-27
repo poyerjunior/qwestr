@@ -1,5 +1,202 @@
 insert into CandidaturaStatus(nome) values('Aprovado');
 
+
 insert into CandidaturaStatus(nome) values('Reprovado');
 
+
 insert into CandidaturaStatus(nome) values('Aguardando avaliação');
+
+insert into vagaCategoria(nome) values('Comercial, vendas');
+insert into vagaCategoria(nome) values('Administração');
+insert into vagaCategoria(nome) values('Saúde');
+insert into vagaCategoria(nome) values('Logística');
+insert into vagaCategoria(nome) values('Serviços Gerais');
+insert into vagaCategoria(nome) values('Recursos Humanos');
+insert into vagaCategoria(nome) values('Marketing');
+insert into vagaCategoria(nome) values('Informática - TI');
+insert into vagaCategoria(nome) values('Engenharia');
+insert into vagaCategoria(nome) values('Qualidade');
+insert into vagaCategoria(nome) values('Estética');
+insert into vagaCategoria(nome) values('Moda');
+insert into vagaCategoria(nome) values('Arquitetura');
+insert into vagaCategoria(nome) values('Design');
+
+
+insert into questao(enunciado, a, b, c, d, e, correta, Prova_id) values('Historicamente, o nordeste brasileiro beneficiou-se de uma economia agrícola baseada na produção de:', 'trigo', 'café', 'cana-de-açúcar', 'erva-mate', 'borracha', 'c', 1);
+
+
+insert into questao(enunciado, a, b, c, d, e, correta, Prova_id) values('Em 2006, o IBGE completou 70 anos de sua fundação. Esse instituto foi criado no contexto histórico da(o):', 'Ditadura Militar, de Costa e Silva', 'Transição Democrática, de José Sarney', 'Estado Novo, de Getúlio Vargas', 'Plano de Metas, de Juscelino Kubitschek', 'Milagre Brasileiro, de Ernesto Geisel', 'c', 1);
+
+
+insert into questao(enunciado, a, b, c, d, e, correta, Prova_id) values('A produção de biocombustíveis vem despertando interesses e aplicações em diversos países. No Brasil, tem sido muito discutida atualmente a produção de um biocombustível que tem como fonte um produto agrícola. Trata-se da(o):', 'gasolina', 'acetona', 'paracetamol', 'etanol', 'propanolol', 'd', 1);
+
+
+insert into questao(enunciado, a, b, c, d, e, correta, Prova_id) values('Em novembro de 2007, o governo brasileiro anunciou a descoberta de uma importante reserva. O produto a ser explorado é:', 'ferro', 'manganês', 'carvão', 'petróleo', 'estanho', 'd', 1);
+
+
+insert into questao(enunciado, a, b, c, d, e, correta, Prova_id) values('Qual o atual regime e sistema político do Brasil?', 'República Parlamentarista', 'Monarquia Absolutista', 'República Presidencialista', 'Monarquia Parlamentarista', 'República Monarquista', 'c', 1);
+
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Auxiliar Administrativo/Contábil', 'Área e especialização profissional: Administração - Administração Geral
+Nível hierárquico: Auxiliar
+Auxiliar nas classificações e conciliações contábeis, registro de lançamentos, nas apurações de impostos e na elaboração de balancetes.
+Fazer a escrituração fiscal, apuração dos impostos diretos, calcular impostos (PIS, COFINS, ICMS, etc.) e gerar guias de recolhimento.
+Verificar impostos retidos, elaboração e entrega de obrigações acessórias, EFD (Sped Fiscal) e Contribuições.
+Fazer lançamento de notas, fechamento e entrega de declarações, toda rotina fiscal.
+Emitir notas fiscais de venda, serviços e NFTS.
+Elaborar e transmitir as declarações acessórias.
+Orientar os clientes sobre dúvidas e informações em questões de menor complexidade.', 1, 4, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Médico - Radiologista', 'Descrição:
+Área e especialização profissional: Saúde - Radiologia
+Nível hierárquico: Especialista
+Atuará com atendimento aos pacientes, examinar, realizar tratamentos, encaminhar para exames, tirar dúvidas e prescrever medicamentos.
+Requisitos:
+Ensino superior completo em Medicina, com especialização na área.
+Forma de contratação, jornada de trabalho e benefícios a combinar.
+Exigências:
+Escolaridade Mínima: Ensino Superior', 1, 5, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Auxiliar De Logística', 'Descrição:
+Área e especialização profissional: Administração - Administração Geral
+Nível hierárquico: Auxiliar
+Atendimento a Clientes, emissão de CTE , ligações para fornecedores , e toda parte administrativa de uma transportadora.
+Exigências:
+Escolaridade Mínima: Ensino Médio (2º Grau)
+Português (Avançado - Requerido), Inglês (Básico)
+Habilitação para dirigir
+Aplicações de Escritório: Microsoft Excel, Microsoft Outlook, Microsoft PowerPoint, Microsoft Word, Open Office
+Benefícios adicionais:
+Refeição no local, Vale-transporte', 1, 6, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Auxiliar De Limpeza', 'Descrição:
+Área e especialização profissional: Serviços Gerais - Limpeza
+Nível hierárquico: Operacional
+Número de vagas: 2
+Local de trabalho: São Paulo, SP
+Responsável por toda limpeza
+Segunda à Sexta horário comercial
+Exigências:
+Escolaridade Mínima: Ensino Fundamental (1º grau)
+Benefícios adicionais:
+Vale-alimentação, Vale-refeição, Vale-transporte', 1, 7, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Analista De Rh - Generalista', 'Descrição:
+Área e especialização profissional: Recursos Humanos - Recursos Humanos (Generalista)
+Nível hierárquico: Analista
+Local de trabalho: Santos, SP
+Requisitos: Treinamento e desenvolvimento, cargos e salários, implantar plano de carreira, manutenção de benefícios, 
+suporte na conferencia referente a FOPAG junto a Contabilidade, 
+Monitorar ponto eletrônico para garantir que as marcações sejam registradas corretamente, 
+avaliação de desempenho e clima organizacional, Recrutamento e seleção.
+Exigências
+Escolaridade Mínima: Ensino Superior
+Habilitação para dirigir (Categoria A, Categoria B, Categoria C)
+Veículo próprio
+Disponibilidade para viajar
+Disponibilidade para mudar de residência
+Benefícios adicionais
+Assistência médica, Assistência odontológica, Bônus por resultado, Participação nos lucros, Vale-alimentação, Vale-refeição, Vale-transporte', 1, 8, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Analista De Marketing', 'Descrição:
+Área e especialização profissional: Marketing - Marketing
+Nível hierárquico: Analista
+Local de trabalho: Curitiba - PR
+Auxiliará o gerente no acompanhamento do desempenho de vendas e fornecedores, prestará suporte no contato com agência de propaganda.
+Qualificação: Experiencia como assistente de marketing.
+Horário de Trabalho: De segunda a sexta feira das 08h as 17h45.
+Exigências:
+Escolaridade Mínima: Ensino Médio (2º Grau)
+Benefícios adicionais:
+Assistência médica, Assistência odontológica, Vale-refeição, Vale-transporte', 1, 9, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Desenvolvedor De Software', 'Descrição:
+Área e especialização profissional: Informática, TI, Telecomunicações - Programador / Desenvolvedor
+Nível hierárquico: Especialista
+Local de trabalho: Porto Alegre, RS
+Requisitos:
+Experiência com desenvolvimento de plataformas.
+Experiência: Até dois anos de formado, nos cursos de ciência da computação, engenharia da computação, ou áreas afins.
+Idioma exigido: Inglês (intermediário)
+Tempo Integral
+Exigências
+Escolaridade Mínima: Ensino Superior', 1, 10, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Engenheiro Mecânico', 'Descrição:
+Área e especialização profissional: Engenharia - Engenharia Mecânica, Mecatrônica
+Nível hierárquico: Supervisor
+Local de trabalho: Macapá, AP
+Atuará na área de engenharia mecânica, necessário conhecimento em sistemas de ar condicionado, ar centrais e demais máquinas. 
+Desejável alguns conhecimentos em sistema de transporte vertical. 
+Fará gestão da equipe operacional, elaboração de relatórios e participara de reuniões com clientes.
+Necessário formação em Engenharia Mecânica.
+Salário: 7.964,50
+Exigências:
+Escolaridade Mínima: Ensino Superior
+Benefícios adicionais:
+Vale-refeição, Vale-transporte', 1, 11, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Engenheiro Mecânico', 'Descrição:
+Área e especialização profissional: Engenharia - Engenharia Mecânica, Mecatrônica
+Nível hierárquico: Supervisor
+Local de trabalho: Macapá, AP
+Atuará na área de engenharia mecânica, necessário conhecimento em sistemas de ar condicionado, ar centrais e demais máquinas. 
+Desejável alguns conhecimentos em sistema de transporte vertical. 
+Fará gestão da equipe operacional, elaboração de relatórios e participara de reuniões com clientes.
+Necessário formação em Engenharia Mecânica.
+Salário: 7.964,50
+Exigências:
+Escolaridade Mínima: Ensino Superior
+Benefícios adicionais:
+Vale-refeição, Vale-transporte', 1, 11, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Assistente Da Qualidade', 'Descrição:
+Área e especialização profissional: Qualidade - Qualidade
+Nível hierárquico: Assistente
+Local de trabalho: Belo Horizonte, MG
+Realizar atividades de suporte ao Sistema de Gestão da Qualidade, envolvendo a análise de normas, preparação de treinamentos, 
+organização de documentação e outras atividades de apoio administrativo, 
+visando contribuir para o alcance dos objetivos estabelecidos pela empresa. 
+Desejável experiência na área hospitalar
+Formação em Gestão da Qualidade
+Exigências:
+Escolaridade Mínima: Ensino Superior
+Aplicações de Escritório: Microsoft Excel, Microsoft PowerPoint, Microsoft Word
+Benefícios adicionais:
+Assistência médica, Assistência odontológica, Auxílio farmácia, Seguro de Vida, Vale-alimentação, Vale-refeição, Vale-transporte', 1, 12, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Esteticista Corporal E Facial', 'Área e especialização profissional: Estética - Esteticista
+Nível hierárquico: Especialista
+Local de trabalho: Maringá, PR
+Realização de tratamentos faciais e corporais;
+Utilização de aparelhos estéticos;
+Agendamento e organização da agenda de atendimento;
+É necessário ter experiência na área;
+É necessário ter experiência em massagem manual facial e corporal.
+Exigências
+Escolaridade Mínima: Ensino Superior
+Português
+Benefícios adicionais
+Cesta básica', 1, 13, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Arquiteto', 'Descrição
+Área e especialização profissional: Arquitetura, Decoração, Design - Arquitetura, Urbanismo
+Nível hierárquico: Estagiário
+Local de trabalho: Belo Horizonte, MG
+Profissionais da área para trabalhar com qualidade e eficiência.
+Exigências:
+Escolaridade Mínima: Ensino Superior
+Habilitação para dirigir
+Gráficos/Web.
+Aplicações de Escritório: Microsoft Excel, Microsoft PowerPoint, Microsoft Word
+Benefícios adicionais:
+Previdência Privada, Vale-alimentação, Vale-transporte', 1, 15, 1);
+
+insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Design Gráfico', 'Área e especialização profissional: Administração - Administração Geral
+Nível hierárquico: Analista
+Local de trabalho: Guarulhos, SP
+Desenvolvimento de estampas, ilustração, criação de peças de comunicação online e impressos.
+Graduação ou experiência de trabalho na área (nível superior)
+Portfólio online
+Conhecimento de HTML, CSS e JavaScript básicos
+Mídias Sociais', 1, 16, 1);

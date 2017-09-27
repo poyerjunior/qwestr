@@ -60,9 +60,9 @@
                 var p1 = $("#txtBuscar").val();
                 getLoaderBar(dvMsg);
                 $.ajax({
-                    url: servlet + "?tipoServlet=" + tipoServlet + "&qtd=" + qtd + "&p1=" + p1,
-                    type: "get",
-                    data: null,
+                    url: servlet,
+                    type: "post",
+                    data: "tipoServlet=" + tipoServlet + "&qtd=" + qtd + "&p1=" + p1,
                     success: function (data) {
                         var result = "";
                         data = JSON.parse(data);
