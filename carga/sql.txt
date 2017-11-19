@@ -1,13 +1,10 @@
+insert into empresa(cnpj, nome, email, senha) values('34.546.868/9790-90', 'Minha Empresa', 'empresa@empresa.com', 123);
+
 insert into CandidaturaStatus(nome) values('Aprovado');
-
-
 insert into CandidaturaStatus(nome) values('Reprovado');
-
-
 insert into CandidaturaStatus(nome) values('Aguardando avaliação');
 
 insert into vagaCategoria(nome) values('Comercial, vendas');
-insert into vagaCategoria(nome) values('Administração');
 insert into vagaCategoria(nome) values('Saúde');
 insert into vagaCategoria(nome) values('Logística');
 insert into vagaCategoria(nome) values('Serviços Gerais');
@@ -21,6 +18,7 @@ insert into vagaCategoria(nome) values('Moda');
 insert into vagaCategoria(nome) values('Arquitetura');
 insert into vagaCategoria(nome) values('Design');
 
+insert into prova(nome) values ('Conhecimentos Gerais');
 
 insert into questao(enunciado, a, b, c, d, e, correta, Prova_id) values('Historicamente, o nordeste brasileiro beneficiou-se de uma economia agrícola baseada na produção de:', 'trigo', 'café', 'cana-de-açúcar', 'erva-mate', 'borracha', 'c', 1);
 
@@ -45,7 +43,7 @@ Verificar impostos retidos, elaboração e entrega de obrigações acessórias, EFD (
 Fazer lançamento de notas, fechamento e entrega de declarações, toda rotina fiscal.
 Emitir notas fiscais de venda, serviços e NFTS.
 Elaborar e transmitir as declarações acessórias.
-Orientar os clientes sobre dúvidas e informações em questões de menor complexidade.', 1, 4, 1);
+Orientar os clientes sobre dúvidas e informações em questões de menor complexidade.', 1, 1, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Médico - Radiologista', 'Descrição:
 Área e especialização profissional: Saúde - Radiologia
@@ -55,7 +53,7 @@ Requisitos:
 Ensino superior completo em Medicina, com especialização na área.
 Forma de contratação, jornada de trabalho e benefícios a combinar.
 Exigências:
-Escolaridade Mínima: Ensino Superior', 1, 5, 1);
+Escolaridade Mínima: Ensino Superior', 1, 2, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Auxiliar De Logística', 'Descrição:
 Área e especialização profissional: Administração - Administração Geral
@@ -67,7 +65,7 @@ Português (Avançado - Requerido), Inglês (Básico)
 Habilitação para dirigir
 Aplicações de Escritório: Microsoft Excel, Microsoft Outlook, Microsoft PowerPoint, Microsoft Word, Open Office
 Benefícios adicionais:
-Refeição no local, Vale-transporte', 1, 6, 1);
+Refeição no local, Vale-transporte', 1, 3, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Auxiliar De Limpeza', 'Descrição:
 Área e especialização profissional: Serviços Gerais - Limpeza
@@ -79,7 +77,7 @@ Segunda à Sexta horário comercial
 Exigências:
 Escolaridade Mínima: Ensino Fundamental (1º grau)
 Benefícios adicionais:
-Vale-alimentação, Vale-refeição, Vale-transporte', 1, 7, 1);
+Vale-alimentação, Vale-refeição, Vale-transporte', 1, 4, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Analista De Rh - Generalista', 'Descrição:
 Área e especialização profissional: Recursos Humanos - Recursos Humanos (Generalista)
@@ -96,7 +94,7 @@ Veículo próprio
 Disponibilidade para viajar
 Disponibilidade para mudar de residência
 Benefícios adicionais
-Assistência médica, Assistência odontológica, Bônus por resultado, Participação nos lucros, Vale-alimentação, Vale-refeição, Vale-transporte', 1, 8, 1);
+Assistência médica, Assistência odontológica, Bônus por resultado, Participação nos lucros, Vale-alimentação, Vale-refeição, Vale-transporte', 1, 5, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Analista De Marketing', 'Descrição:
 Área e especialização profissional: Marketing - Marketing
@@ -108,7 +106,7 @@ Horário de Trabalho: De segunda a sexta feira das 08h as 17h45.
 Exigências:
 Escolaridade Mínima: Ensino Médio (2º Grau)
 Benefícios adicionais:
-Assistência médica, Assistência odontológica, Vale-refeição, Vale-transporte', 1, 9, 1);
+Assistência médica, Assistência odontológica, Vale-refeição, Vale-transporte', 1, 6, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Desenvolvedor De Software', 'Descrição:
 Área e especialização profissional: Informática, TI, Telecomunicações - Programador / Desenvolvedor
@@ -120,7 +118,7 @@ Experiência: Até dois anos de formado, nos cursos de ciência da computação, enge
 Idioma exigido: Inglês (intermediário)
 Tempo Integral
 Exigências
-Escolaridade Mínima: Ensino Superior', 1, 10, 1);
+Escolaridade Mínima: Ensino Superior', 1, 7, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Engenheiro Mecânico', 'Descrição:
 Área e especialização profissional: Engenharia - Engenharia Mecânica, Mecatrônica
@@ -134,21 +132,7 @@ Salário: 7.964,50
 Exigências:
 Escolaridade Mínima: Ensino Superior
 Benefícios adicionais:
-Vale-refeição, Vale-transporte', 1, 11, 1);
-
-insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Engenheiro Mecânico', 'Descrição:
-Área e especialização profissional: Engenharia - Engenharia Mecânica, Mecatrônica
-Nível hierárquico: Supervisor
-Local de trabalho: Macapá, AP
-Atuará na área de engenharia mecânica, necessário conhecimento em sistemas de ar condicionado, ar centrais e demais máquinas. 
-Desejável alguns conhecimentos em sistema de transporte vertical. 
-Fará gestão da equipe operacional, elaboração de relatórios e participara de reuniões com clientes.
-Necessário formação em Engenharia Mecânica.
-Salário: 7.964,50
-Exigências:
-Escolaridade Mínima: Ensino Superior
-Benefícios adicionais:
-Vale-refeição, Vale-transporte', 1, 11, 1);
+Vale-refeição, Vale-transporte', 1, 8, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Assistente Da Qualidade', 'Descrição:
 Área e especialização profissional: Qualidade - Qualidade
@@ -163,7 +147,7 @@ Exigências:
 Escolaridade Mínima: Ensino Superior
 Aplicações de Escritório: Microsoft Excel, Microsoft PowerPoint, Microsoft Word
 Benefícios adicionais:
-Assistência médica, Assistência odontológica, Auxílio farmácia, Seguro de Vida, Vale-alimentação, Vale-refeição, Vale-transporte', 1, 12, 1);
+Assistência médica, Assistência odontológica, Auxílio farmácia, Seguro de Vida, Vale-alimentação, Vale-refeição, Vale-transporte', 1, 9, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Esteticista Corporal E Facial', 'Área e especialização profissional: Estética - Esteticista
 Nível hierárquico: Especialista
@@ -177,7 +161,7 @@ Exigências
 Escolaridade Mínima: Ensino Superior
 Português
 Benefícios adicionais
-Cesta básica', 1, 13, 1);
+Cesta básica', 1, 10, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Arquiteto', 'Descrição
 Área e especialização profissional: Arquitetura, Decoração, Design - Arquitetura, Urbanismo
@@ -190,7 +174,7 @@ Habilitação para dirigir
 Gráficos/Web.
 Aplicações de Escritório: Microsoft Excel, Microsoft PowerPoint, Microsoft Word
 Benefícios adicionais:
-Previdência Privada, Vale-alimentação, Vale-transporte', 1, 15, 1);
+Previdência Privada, Vale-alimentação, Vale-transporte', 1, 12, 1);
 
 insert into vaga(nome, descricao, prova, VagaCategoria_id, Empresa_id) values('Design Gráfico', 'Área e especialização profissional: Administração - Administração Geral
 Nível hierárquico: Analista
@@ -199,4 +183,4 @@ Desenvolvimento de estampas, ilustração, criação de peças de comunicação online 
 Graduação ou experiência de trabalho na área (nível superior)
 Portfólio online
 Conhecimento de HTML, CSS e JavaScript básicos
-Mídias Sociais', 1, 16, 1);
+Mídias Sociais', 1, 13, 1);
